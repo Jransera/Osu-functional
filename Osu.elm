@@ -2,17 +2,25 @@ port module Osu exposing (..)
 
 import Audio exposing (Audio, AudioCmd, AudioData)
 import Duration
-import Html exposing (Html)
+import Html exposing (..)
 import Html.Events
 import Json.Decode
 import Json.Encode
 import List.Nonempty exposing (Nonempty(..))
 import Task
 import Time
+import Color exposing (..)
+--import Canvas exposing (Shape)
+--import Canvas.Settings exposing (..)
+--import Html.Attributes exposing (attribute)
+import Random exposing (..)
+import Svg exposing (..)
+import Svg.Attributes exposing (..)
 
 type alias LoadedModel_ =
     { sound : Audio.Source
     , soundState : SoundState
+    , hitCount : Int
     }
 
 
@@ -21,12 +29,14 @@ type SoundState
     | Playing Time.Posix
     | FadingOut Time.Posix Time.Posix
 
+-- MODEL
 
 type Model
     = LoadingModel
     | LoadedModel LoadedModel_
     | LoadFailedModel
 
+type alias Point = { x:Float, y:Float }
 
 type Msg
     = SoundLoaded (Result Audio.LoadError Audio.Source)
@@ -34,6 +44,8 @@ type Msg
     | PressedPlayAndGotTime Time.Posix
     | PressedStop
     | PressedStopAndGotTime Time.Posix
+    | RandomTarget Point 
+    | Hit Point
 
 
 init : flags -> ( Model, Cmd Msg, AudioCmd Msg )
@@ -45,6 +57,7 @@ init _ =
         "./party-in-me.mp3"
     )
 
+-- UPDATE
 
 update : AudioData -> Msg -> Model -> ( Model, Cmd Msg, AudioCmd Msg )
 update _ msg model =
@@ -52,7 +65,7 @@ update _ msg model =
         ( SoundLoaded result, LoadingModel ) ->
             case result of
                 Ok sound ->
-                    ( LoadedModel { sound = sound, soundState = NotPlaying }
+                    ( LoadedModel { sound = sound, soundState = NotPlaying, hitCount = 0 }
                     , Cmd.none
                     , Audio.cmdNone
                     )
@@ -89,6 +102,7 @@ update _ msg model =
         _ ->
             ( model, Cmd.none, Audio.cmdNone )
 
+-- VIEW
 
 view : AudioData -> Model -> Html Msg
 view _ model =
@@ -100,8 +114,20 @@ view _ model =
                 Playing _ ->
                     Html.div
                         []
-                        [ Html.button [ Html.Events.onClick PressedStop ] [ Html.text "Stop music" ] ]
-
+                        [ Html.button [ Html.Events.onClick PressedStop ] [ Html.text "Stop music" ]
+                        , svg
+                          [ width "1100"
+                          , height "700"
+                          , viewBox "0 50 1100 700"
+                          ]
+                          [ circle
+                            [ cx "550"
+                            , cy "350"
+                            , r "50"
+                            ]
+                            []
+                          ]
+                        ]
                 _ ->
                     Html.div
                         []
@@ -109,6 +135,7 @@ view _ model =
         LoadFailedModel ->
             Html.text "Failed to load sound."
 
+-- AUDIO
 
 audio : AudioData -> Model -> Audio
 audio _ model =
@@ -132,6 +159,7 @@ port audioPortToJS : Json.Encode.Value -> Cmd msg
 
 port audioPortFromJS : (Json.Decode.Value -> msg) -> Sub msg
 
+-- MAIN
 main : Platform.Program () (Audio.Model Msg Model) (Audio.Msg Msg)
 main =
     Audio.elementWithAudio
@@ -142,3 +170,5 @@ main =
         , audio = audio
         , audioPort = { toJS = audioPortToJS, fromJS = audioPortFromJS }
         }
+
+-- DRAWING CIRCLES

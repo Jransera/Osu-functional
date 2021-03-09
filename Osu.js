@@ -7156,7 +7156,7 @@ var $author$project$Osu$update = F3(
 							var sound = result.a;
 							return _Utils_Tuple3(
 								$author$project$Osu$LoadedModel(
-									{sound: sound, soundState: $author$project$Osu$NotPlaying}),
+									{hitCount: 0, sound: sound, soundState: $author$project$Osu$NotPlaying}),
 								$elm$core$Platform$Cmd$none,
 								$MartinSStewart$elm_audio$Audio$cmdNone);
 						} else {
@@ -7223,7 +7223,12 @@ var $author$project$Osu$update = F3(
 var $author$project$Osu$PressedPlay = {$: 'PressedPlay'};
 var $author$project$Osu$PressedStop = {$: 'PressedStop'};
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
+var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -7241,8 +7246,12 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $author$project$Osu$view = F2(
 	function (_v0, model) {
 		switch (model.$) {
@@ -7266,6 +7275,26 @@ var $author$project$Osu$view = F2(
 								_List_fromArray(
 									[
 										$elm$html$Html$text('Stop music')
+									])),
+								A2(
+								$elm$svg$Svg$svg,
+								_List_fromArray(
+									[
+										$elm$svg$Svg$Attributes$width('1000'),
+										$elm$svg$Svg$Attributes$height('700'),
+										$elm$svg$Svg$Attributes$viewBox('0 50 1000 700')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$svg$Svg$circle,
+										_List_fromArray(
+											[
+												$elm$svg$Svg$Attributes$cx('500'),
+												$elm$svg$Svg$Attributes$cy('300'),
+												$elm$svg$Svg$Attributes$r('50')
+											]),
+										_List_Nil)
 									]))
 							]));
 				} else {
