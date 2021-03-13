@@ -21,6 +21,7 @@ type alias LoadedModel_ =
     { sound : Audio.Source
     , soundState : SoundState
     , hitCount : Int
+    , points : List Point
     }
 
 
@@ -44,8 +45,9 @@ type Msg
     | PressedPlayAndGotTime Time.Posix
     | PressedStop
     | PressedStopAndGotTime Time.Posix
-    | RandomTarget Point 
+    | RandomPoint Point 
     | Hit Point
+    | Tick
 
 
 init : flags -> ( Model, Cmd Msg, AudioCmd Msg )
@@ -62,10 +64,16 @@ init _ =
 update : AudioData -> Msg -> Model -> ( Model, Cmd Msg, AudioCmd Msg )
 update _ msg model =
     case ( msg, model ) of
+        (RandomPoint point,LoadedModel loadedModel) ->
+           ( LoadedModel {sound = loadedModel.sound, soundState = loadedModel.soundState, 
+            hitCount = loadedModel.hitCount, points = loadedModel.points ++[point]}
+             ,Cmd.none
+             ,Audio.cmdNone)      
+
         ( SoundLoaded result, LoadingModel ) ->
             case result of
                 Ok sound ->
-                    ( LoadedModel { sound = sound, soundState = NotPlaying, hitCount = 0 }
+                    ( LoadedModel { sound = sound, soundState = NotPlaying, hitCount = 0, points = []}
                     , Cmd.none
                     , Audio.cmdNone
                     )
@@ -99,8 +107,45 @@ update _ msg model =
 
                 _ ->
                     ( model, Cmd.none, Audio.cmdNone )
+        
+        (Tick,_) -> (model, Random.generate RandomPoint pointGenerator, Audio.cmdNone)
+             
         _ ->
             ( model, Cmd.none, Audio.cmdNone )
+
+           
+        
+--SUBSCRIPTION
+subscriptions : AudioData -> Model -> Sub Msg
+subscriptions _ model =
+    Time.every 500 (always Tick)
+
+
+
+pointGenerator : Generator Point
+pointGenerator =
+  let
+    x = ( Random.float 50 1000) 
+    y = ( Random.float 50 600)
+  in
+    Random.map2 Point x y 
+
+
+pointToCircle: String -> Point -> Svg Msg
+pointToCircle foo bar = 
+    circle [ cx (String.fromFloat bar.x)
+             ,cy (String.fromFloat bar.y)
+             ,r "5"
+             ,fill foo
+           ]
+           [] 
+        
+pointToCircles: String -> List Point -> List (Svg Msg)  
+pointToCircles colors points = 
+    List.map (pointToCircle colors) points
+
+
+
 
 -- VIEW
 
@@ -112,7 +157,11 @@ view _ model =
         LoadedModel loadingModel ->
             case loadingModel.soundState of
                 Playing _ ->
-                    Html.div
+                    let 
+                       list = loadingModel.points
+                       dots = pointToCircles "red" list
+                     in
+                      Html.div
                         []
                         [ Html.button [ Html.Events.onClick PressedStop ] [ Html.text "Stop music" ]
                         , svg
@@ -120,13 +169,12 @@ view _ model =
                           , height "700"
                           , viewBox "0 50 1100 700"
                           ]
-                          [ circle
-                            [ cx "550"
-                            , cy "350"
-                            , r "50"
-                            ]
-                            []
-                          ]
+                                     
+                          dots
+                                                
+                                                  
+                            
+                          
                         ]
                 _ ->
                     Html.div
@@ -166,7 +214,7 @@ main =
         { init = init
         , update = update
         , view = view
-        , subscriptions = \_ _ -> Sub.none
+        , subscriptions = subscriptions
         , audio = audio
         , audioPort = { toJS = audioPortToJS, fromJS = audioPortFromJS }
         }

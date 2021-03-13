@@ -4401,6 +4401,43 @@ function _Time_getZoneName()
 		callback(_Scheduler_succeed(name));
 	});
 }
+
+
+
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
@@ -7107,7 +7144,262 @@ var $author$project$Osu$init = function (_v0) {
 		$elm$core$Platform$Cmd$none,
 		A2($MartinSStewart$elm_audio$Audio$loadAudio, $author$project$Osu$SoundLoaded, './party-in-me.mp3'));
 };
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$Osu$Tick = {$: 'Tick'};
+var $elm$core$Basics$always = F2(
+	function (a, _v0) {
+		return a;
+	});
+var $elm$time$Time$Every = F2(
+	function (a, b) {
+		return {$: 'Every', a: a, b: b};
+	});
+var $elm$time$Time$State = F2(
+	function (taggers, processes) {
+		return {processes: processes, taggers: taggers};
+	});
+var $elm$time$Time$init = $elm$core$Task$succeed(
+	A2($elm$time$Time$State, $elm$core$Dict$empty, $elm$core$Dict$empty));
+var $elm$time$Time$addMySub = F2(
+	function (_v0, state) {
+		var interval = _v0.a;
+		var tagger = _v0.b;
+		var _v1 = A2($elm$core$Dict$get, interval, state);
+		if (_v1.$ === 'Nothing') {
+			return A3(
+				$elm$core$Dict$insert,
+				interval,
+				_List_fromArray(
+					[tagger]),
+				state);
+		} else {
+			var taggers = _v1.a;
+			return A3(
+				$elm$core$Dict$insert,
+				interval,
+				A2($elm$core$List$cons, tagger, taggers),
+				state);
+		}
+	});
+var $elm$core$Process$kill = _Scheduler_kill;
+var $elm$core$Dict$merge = F6(
+	function (leftStep, bothStep, rightStep, leftDict, rightDict, initialResult) {
+		var stepState = F3(
+			function (rKey, rValue, _v0) {
+				stepState:
+				while (true) {
+					var list = _v0.a;
+					var result = _v0.b;
+					if (!list.b) {
+						return _Utils_Tuple2(
+							list,
+							A3(rightStep, rKey, rValue, result));
+					} else {
+						var _v2 = list.a;
+						var lKey = _v2.a;
+						var lValue = _v2.b;
+						var rest = list.b;
+						if (_Utils_cmp(lKey, rKey) < 0) {
+							var $temp$rKey = rKey,
+								$temp$rValue = rValue,
+								$temp$_v0 = _Utils_Tuple2(
+								rest,
+								A3(leftStep, lKey, lValue, result));
+							rKey = $temp$rKey;
+							rValue = $temp$rValue;
+							_v0 = $temp$_v0;
+							continue stepState;
+						} else {
+							if (_Utils_cmp(lKey, rKey) > 0) {
+								return _Utils_Tuple2(
+									list,
+									A3(rightStep, rKey, rValue, result));
+							} else {
+								return _Utils_Tuple2(
+									rest,
+									A4(bothStep, lKey, lValue, rValue, result));
+							}
+						}
+					}
+				}
+			});
+		var _v3 = A3(
+			$elm$core$Dict$foldl,
+			stepState,
+			_Utils_Tuple2(
+				$elm$core$Dict$toList(leftDict),
+				initialResult),
+			rightDict);
+		var leftovers = _v3.a;
+		var intermediateResult = _v3.b;
+		return A3(
+			$elm$core$List$foldl,
+			F2(
+				function (_v4, result) {
+					var k = _v4.a;
+					var v = _v4.b;
+					return A3(leftStep, k, v, result);
+				}),
+			intermediateResult,
+			leftovers);
+	});
+var $elm$core$Platform$sendToSelf = _Platform_sendToSelf;
+var $elm$time$Time$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var $elm$time$Time$Offset = function (a) {
+	return {$: 'Offset', a: a};
+};
+var $elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 'Zone', a: a, b: b};
+	});
+var $elm$time$Time$customZone = $elm$time$Time$Zone;
+var $elm$time$Time$setInterval = _Time_setInterval;
+var $elm$core$Process$spawn = _Scheduler_spawn;
+var $elm$time$Time$spawnHelp = F3(
+	function (router, intervals, processes) {
+		if (!intervals.b) {
+			return $elm$core$Task$succeed(processes);
+		} else {
+			var interval = intervals.a;
+			var rest = intervals.b;
+			var spawnTimer = $elm$core$Process$spawn(
+				A2(
+					$elm$time$Time$setInterval,
+					interval,
+					A2($elm$core$Platform$sendToSelf, router, interval)));
+			var spawnRest = function (id) {
+				return A3(
+					$elm$time$Time$spawnHelp,
+					router,
+					rest,
+					A3($elm$core$Dict$insert, interval, id, processes));
+			};
+			return A2($elm$core$Task$andThen, spawnRest, spawnTimer);
+		}
+	});
+var $elm$time$Time$onEffects = F3(
+	function (router, subs, _v0) {
+		var processes = _v0.processes;
+		var rightStep = F3(
+			function (_v6, id, _v7) {
+				var spawns = _v7.a;
+				var existing = _v7.b;
+				var kills = _v7.c;
+				return _Utils_Tuple3(
+					spawns,
+					existing,
+					A2(
+						$elm$core$Task$andThen,
+						function (_v5) {
+							return kills;
+						},
+						$elm$core$Process$kill(id)));
+			});
+		var newTaggers = A3($elm$core$List$foldl, $elm$time$Time$addMySub, $elm$core$Dict$empty, subs);
+		var leftStep = F3(
+			function (interval, taggers, _v4) {
+				var spawns = _v4.a;
+				var existing = _v4.b;
+				var kills = _v4.c;
+				return _Utils_Tuple3(
+					A2($elm$core$List$cons, interval, spawns),
+					existing,
+					kills);
+			});
+		var bothStep = F4(
+			function (interval, taggers, id, _v3) {
+				var spawns = _v3.a;
+				var existing = _v3.b;
+				var kills = _v3.c;
+				return _Utils_Tuple3(
+					spawns,
+					A3($elm$core$Dict$insert, interval, id, existing),
+					kills);
+			});
+		var _v1 = A6(
+			$elm$core$Dict$merge,
+			leftStep,
+			bothStep,
+			rightStep,
+			newTaggers,
+			processes,
+			_Utils_Tuple3(
+				_List_Nil,
+				$elm$core$Dict$empty,
+				$elm$core$Task$succeed(_Utils_Tuple0)));
+		var spawnList = _v1.a;
+		var existingDict = _v1.b;
+		var killTask = _v1.c;
+		return A2(
+			$elm$core$Task$andThen,
+			function (newProcesses) {
+				return $elm$core$Task$succeed(
+					A2($elm$time$Time$State, newTaggers, newProcesses));
+			},
+			A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$time$Time$spawnHelp, router, spawnList, existingDict);
+				},
+				killTask));
+	});
+var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
+var $elm$time$Time$onSelfMsg = F3(
+	function (router, interval, state) {
+		var _v0 = A2($elm$core$Dict$get, interval, state.taggers);
+		if (_v0.$ === 'Nothing') {
+			return $elm$core$Task$succeed(state);
+		} else {
+			var taggers = _v0.a;
+			var tellTaggers = function (time) {
+				return $elm$core$Task$sequence(
+					A2(
+						$elm$core$List$map,
+						function (tagger) {
+							return A2(
+								$elm$core$Platform$sendToApp,
+								router,
+								tagger(time));
+						},
+						taggers));
+			};
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v1) {
+					return $elm$core$Task$succeed(state);
+				},
+				A2($elm$core$Task$andThen, tellTaggers, $elm$time$Time$now));
+		}
+	});
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $elm$time$Time$subMap = F2(
+	function (f, _v0) {
+		var interval = _v0.a;
+		var tagger = _v0.b;
+		return A2(
+			$elm$time$Time$Every,
+			interval,
+			A2($elm$core$Basics$composeL, f, tagger));
+	});
+_Platform_effectManagers['Time'] = _Platform_createManager($elm$time$Time$init, $elm$time$Time$onEffects, $elm$time$Time$onSelfMsg, 0, $elm$time$Time$subMap);
+var $elm$time$Time$subscription = _Platform_leaf('Time');
+var $elm$time$Time$every = F2(
+	function (interval, tagger) {
+		return $elm$time$Time$subscription(
+			A2($elm$time$Time$Every, interval, tagger));
+	});
+var $author$project$Osu$subscriptions = F2(
+	function (_v0, model) {
+		return A2(
+			$elm$time$Time$every,
+			500,
+			$elm$core$Basics$always($author$project$Osu$Tick));
+	});
 var $author$project$Osu$FadingOut = F2(
 	function (a, b) {
 		return {$: 'FadingOut', a: a, b: b};
@@ -7126,96 +7418,267 @@ var $author$project$Osu$PressedPlayAndGotTime = function (a) {
 var $author$project$Osu$PressedStopAndGotTime = function (a) {
 	return {$: 'PressedStopAndGotTime', a: a};
 };
+var $author$project$Osu$RandomPoint = function (a) {
+	return {$: 'RandomPoint', a: a};
+};
 var $MartinSStewart$elm_audio$Audio$AudioCmdGroup = function (a) {
 	return {$: 'AudioCmdGroup', a: a};
 };
 var $MartinSStewart$elm_audio$Audio$cmdNone = $MartinSStewart$elm_audio$Audio$AudioCmdGroup(_List_Nil);
-var $elm$time$Time$Name = function (a) {
-	return {$: 'Name', a: a};
+var $elm$random$Random$Generate = function (a) {
+	return {$: 'Generate', a: a};
 };
-var $elm$time$Time$Offset = function (a) {
-	return {$: 'Offset', a: a};
-};
-var $elm$time$Time$Zone = F2(
+var $elm$random$Random$Seed = F2(
 	function (a, b) {
-		return {$: 'Zone', a: a, b: b};
+		return {$: 'Seed', a: a, b: b};
 	});
-var $elm$time$Time$customZone = $elm$time$Time$Zone;
-var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$random$Random$next = function (_v0) {
+	var state0 = _v0.a;
+	var incr = _v0.b;
+	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
+};
+var $elm$random$Random$initialSeed = function (x) {
+	var _v0 = $elm$random$Random$next(
+		A2($elm$random$Random$Seed, 0, 1013904223));
+	var state1 = _v0.a;
+	var incr = _v0.b;
+	var state2 = (state1 + x) >>> 0;
+	return $elm$random$Random$next(
+		A2($elm$random$Random$Seed, state2, incr));
+};
+var $elm$random$Random$init = A2(
+	$elm$core$Task$andThen,
+	function (time) {
+		return $elm$core$Task$succeed(
+			$elm$random$Random$initialSeed(
+				$elm$time$Time$posixToMillis(time)));
+	},
+	$elm$time$Time$now);
+var $elm$random$Random$step = F2(
+	function (_v0, seed) {
+		var generator = _v0.a;
+		return generator(seed);
+	});
+var $elm$random$Random$onEffects = F3(
+	function (router, commands, seed) {
+		if (!commands.b) {
+			return $elm$core$Task$succeed(seed);
+		} else {
+			var generator = commands.a.a;
+			var rest = commands.b;
+			var _v1 = A2($elm$random$Random$step, generator, seed);
+			var value = _v1.a;
+			var newSeed = _v1.b;
+			return A2(
+				$elm$core$Task$andThen,
+				function (_v2) {
+					return A3($elm$random$Random$onEffects, router, rest, newSeed);
+				},
+				A2($elm$core$Platform$sendToApp, router, value));
+		}
+	});
+var $elm$random$Random$onSelfMsg = F3(
+	function (_v0, _v1, seed) {
+		return $elm$core$Task$succeed(seed);
+	});
+var $elm$random$Random$Generator = function (a) {
+	return {$: 'Generator', a: a};
+};
+var $elm$random$Random$map = F2(
+	function (func, _v0) {
+		var genA = _v0.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v1 = genA(seed0);
+				var a = _v1.a;
+				var seed1 = _v1.b;
+				return _Utils_Tuple2(
+					func(a),
+					seed1);
+			});
+	});
+var $elm$random$Random$cmdMap = F2(
+	function (func, _v0) {
+		var generator = _v0.a;
+		return $elm$random$Random$Generate(
+			A2($elm$random$Random$map, func, generator));
+	});
+_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
+var $elm$random$Random$command = _Platform_leaf('Random');
+var $elm$random$Random$generate = F2(
+	function (tagger, generator) {
+		return $elm$random$Random$command(
+			$elm$random$Random$Generate(
+				A2($elm$random$Random$map, tagger, generator)));
+	});
+var $author$project$Osu$Point = F2(
+	function (x, y) {
+		return {x: x, y: y};
+	});
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$xor = _Bitwise_xor;
+var $elm$random$Random$peel = function (_v0) {
+	var state = _v0.a;
+	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
+	return ((word >>> 22) ^ word) >>> 0;
+};
+var $elm$random$Random$float = F2(
+	function (a, b) {
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var seed1 = $elm$random$Random$next(seed0);
+				var range = $elm$core$Basics$abs(b - a);
+				var n1 = $elm$random$Random$peel(seed1);
+				var n0 = $elm$random$Random$peel(seed0);
+				var lo = (134217727 & n1) * 1.0;
+				var hi = (67108863 & n0) * 1.0;
+				var val = ((hi * 134217728.0) + lo) / 9007199254740992.0;
+				var scaled = (val * range) + a;
+				return _Utils_Tuple2(
+					scaled,
+					$elm$random$Random$next(seed1));
+			});
+	});
+var $elm$random$Random$map2 = F3(
+	function (func, _v0, _v1) {
+		var genA = _v0.a;
+		var genB = _v1.a;
+		return $elm$random$Random$Generator(
+			function (seed0) {
+				var _v2 = genA(seed0);
+				var a = _v2.a;
+				var seed1 = _v2.b;
+				var _v3 = genB(seed1);
+				var b = _v3.a;
+				var seed2 = _v3.b;
+				return _Utils_Tuple2(
+					A2(func, a, b),
+					seed2);
+			});
+	});
+var $author$project$Osu$pointGenerator = function () {
+	var y = A2($elm$random$Random$float, 50, 600);
+	var x = A2($elm$random$Random$float, 50, 1000);
+	return A3($elm$random$Random$map2, $author$project$Osu$Point, x, y);
+}();
 var $author$project$Osu$update = F3(
 	function (_v0, msg, model) {
 		var _v1 = _Utils_Tuple2(msg, model);
-		_v1$5:
+		_v1$7:
 		while (true) {
-			switch (_v1.b.$) {
-				case 'LoadingModel':
-					if (_v1.a.$ === 'SoundLoaded') {
+			switch (_v1.a.$) {
+				case 'RandomPoint':
+					if (_v1.b.$ === 'LoadedModel') {
+						var point = _v1.a.a;
+						var loadedModel = _v1.b.a;
+						return _Utils_Tuple3(
+							$author$project$Osu$LoadedModel(
+								{
+									hitCount: loadedModel.hitCount,
+									points: _Utils_ap(
+										loadedModel.points,
+										_List_fromArray(
+											[point])),
+									sound: loadedModel.sound,
+									soundState: loadedModel.soundState
+								}),
+							$elm$core$Platform$Cmd$none,
+							$MartinSStewart$elm_audio$Audio$cmdNone);
+					} else {
+						break _v1$7;
+					}
+				case 'SoundLoaded':
+					if (_v1.b.$ === 'LoadingModel') {
 						var result = _v1.a.a;
 						var _v2 = _v1.b;
 						if (result.$ === 'Ok') {
 							var sound = result.a;
 							return _Utils_Tuple3(
 								$author$project$Osu$LoadedModel(
-									{hitCount: 0, sound: sound, soundState: $author$project$Osu$NotPlaying}),
+									{hitCount: 0, points: _List_Nil, sound: sound, soundState: $author$project$Osu$NotPlaying}),
 								$elm$core$Platform$Cmd$none,
 								$MartinSStewart$elm_audio$Audio$cmdNone);
 						} else {
 							return _Utils_Tuple3($author$project$Osu$LoadFailedModel, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
 						}
 					} else {
-						break _v1$5;
+						break _v1$7;
 					}
-				case 'LoadedModel':
-					switch (_v1.a.$) {
-						case 'PressedPlay':
-							var _v4 = _v1.a;
-							var loadedModel = _v1.b.a;
-							return _Utils_Tuple3(
-								$author$project$Osu$LoadedModel(loadedModel),
-								A2($elm$core$Task$perform, $author$project$Osu$PressedPlayAndGotTime, $elm$time$Time$now),
-								$MartinSStewart$elm_audio$Audio$cmdNone);
-						case 'PressedPlayAndGotTime':
-							var time = _v1.a.a;
-							var loadedModel = _v1.b.a;
+				case 'PressedPlay':
+					if (_v1.b.$ === 'LoadedModel') {
+						var _v4 = _v1.a;
+						var loadedModel = _v1.b.a;
+						return _Utils_Tuple3(
+							$author$project$Osu$LoadedModel(loadedModel),
+							A2($elm$core$Task$perform, $author$project$Osu$PressedPlayAndGotTime, $elm$time$Time$now),
+							$MartinSStewart$elm_audio$Audio$cmdNone);
+					} else {
+						break _v1$7;
+					}
+				case 'PressedPlayAndGotTime':
+					if (_v1.b.$ === 'LoadedModel') {
+						var time = _v1.a.a;
+						var loadedModel = _v1.b.a;
+						return _Utils_Tuple3(
+							$author$project$Osu$LoadedModel(
+								_Utils_update(
+									loadedModel,
+									{
+										soundState: $author$project$Osu$Playing(time)
+									})),
+							$elm$core$Platform$Cmd$none,
+							$MartinSStewart$elm_audio$Audio$cmdNone);
+					} else {
+						break _v1$7;
+					}
+				case 'PressedStop':
+					if (_v1.b.$ === 'LoadedModel') {
+						var _v5 = _v1.a;
+						var loadedModel = _v1.b.a;
+						return _Utils_Tuple3(
+							$author$project$Osu$LoadedModel(loadedModel),
+							A2($elm$core$Task$perform, $author$project$Osu$PressedStopAndGotTime, $elm$time$Time$now),
+							$MartinSStewart$elm_audio$Audio$cmdNone);
+					} else {
+						break _v1$7;
+					}
+				case 'PressedStopAndGotTime':
+					if (_v1.b.$ === 'LoadedModel') {
+						var stopTime = _v1.a.a;
+						var loadedModel = _v1.b.a;
+						var _v6 = loadedModel.soundState;
+						if (_v6.$ === 'Playing') {
+							var startTime = _v6.a;
 							return _Utils_Tuple3(
 								$author$project$Osu$LoadedModel(
 									_Utils_update(
 										loadedModel,
 										{
-											soundState: $author$project$Osu$Playing(time)
+											soundState: A2($author$project$Osu$FadingOut, startTime, stopTime)
 										})),
 								$elm$core$Platform$Cmd$none,
 								$MartinSStewart$elm_audio$Audio$cmdNone);
-						case 'PressedStop':
-							var _v5 = _v1.a;
-							var loadedModel = _v1.b.a;
-							return _Utils_Tuple3(
-								$author$project$Osu$LoadedModel(loadedModel),
-								A2($elm$core$Task$perform, $author$project$Osu$PressedStopAndGotTime, $elm$time$Time$now),
-								$MartinSStewart$elm_audio$Audio$cmdNone);
-						case 'PressedStopAndGotTime':
-							var stopTime = _v1.a.a;
-							var loadedModel = _v1.b.a;
-							var _v6 = loadedModel.soundState;
-							if (_v6.$ === 'Playing') {
-								var startTime = _v6.a;
-								return _Utils_Tuple3(
-									$author$project$Osu$LoadedModel(
-										_Utils_update(
-											loadedModel,
-											{
-												soundState: A2($author$project$Osu$FadingOut, startTime, stopTime)
-											})),
-									$elm$core$Platform$Cmd$none,
-									$MartinSStewart$elm_audio$Audio$cmdNone);
-							} else {
-								return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
-							}
-						default:
-							break _v1$5;
+						} else {
+							return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
+						}
+					} else {
+						break _v1$7;
 					}
+				case 'Tick':
+					var _v7 = _v1.a;
+					return _Utils_Tuple3(
+						model,
+						A2($elm$random$Random$generate, $author$project$Osu$RandomPoint, $author$project$Osu$pointGenerator),
+						$MartinSStewart$elm_audio$Audio$cmdNone);
 				default:
-					break _v1$5;
+					break _v1$7;
 			}
 		}
 		return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
@@ -7223,10 +7686,6 @@ var $author$project$Osu$update = F3(
 var $author$project$Osu$PressedPlay = {$: 'PressedPlay'};
 var $author$project$Osu$PressedStop = {$: 'PressedStop'};
 var $elm$html$Html$button = _VirtualDom_node('button');
-var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
-var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
-var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -7246,7 +7705,35 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
+var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var $author$project$Osu$pointToCircle = F2(
+	function (foo, bar) {
+		return A2(
+			$elm$svg$Svg$circle,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$cx(
+					$elm$core$String$fromFloat(bar.x)),
+					$elm$svg$Svg$Attributes$cy(
+					$elm$core$String$fromFloat(bar.y)),
+					$elm$svg$Svg$Attributes$r('5'),
+					$elm$svg$Svg$Attributes$fill(foo)
+				]),
+			_List_Nil);
+	});
+var $author$project$Osu$pointToCircles = F2(
+	function (colors, points) {
+		return A2(
+			$elm$core$List$map,
+			$author$project$Osu$pointToCircle(colors),
+			points);
+	});
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
@@ -7261,6 +7748,8 @@ var $author$project$Osu$view = F2(
 				var loadingModel = model.a;
 				var _v2 = loadingModel.soundState;
 				if (_v2.$ === 'Playing') {
+					var list = loadingModel.points;
+					var dots = A2($author$project$Osu$pointToCircles, 'red', list);
 					return A2(
 						$elm$html$Html$div,
 						_List_Nil,
@@ -7280,22 +7769,11 @@ var $author$project$Osu$view = F2(
 								$elm$svg$Svg$svg,
 								_List_fromArray(
 									[
-										$elm$svg$Svg$Attributes$width('1000'),
+										$elm$svg$Svg$Attributes$width('1100'),
 										$elm$svg$Svg$Attributes$height('700'),
-										$elm$svg$Svg$Attributes$viewBox('0 50 1000 700')
+										$elm$svg$Svg$Attributes$viewBox('0 50 1100 700')
 									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$svg$Svg$circle,
-										_List_fromArray(
-											[
-												$elm$svg$Svg$Attributes$cx('500'),
-												$elm$svg$Svg$Attributes$cy('300'),
-												$elm$svg$Svg$Attributes$r('50')
-											]),
-										_List_Nil)
-									]))
+								dots)
 							]));
 				} else {
 					return A2(
@@ -7324,10 +7802,7 @@ var $author$project$Osu$main = $MartinSStewart$elm_audio$Audio$elementWithAudio(
 		audio: $author$project$Osu$audio,
 		audioPort: {fromJS: $author$project$Osu$audioPortFromJS, toJS: $author$project$Osu$audioPortToJS},
 		init: $author$project$Osu$init,
-		subscriptions: F2(
-			function (_v0, _v1) {
-				return $elm$core$Platform$Sub$none;
-			}),
+		subscriptions: $author$project$Osu$subscriptions,
 		update: $author$project$Osu$update,
 		view: $author$project$Osu$view
 	});
