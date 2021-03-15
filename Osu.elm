@@ -16,6 +16,8 @@ import Color exposing (..)
 import Random exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+import Svg.Events exposing(..)
+
 
 type alias LoadedModel_ =
     { sound : Audio.Source
@@ -110,10 +112,26 @@ update _ msg model =
         
         (Tick,_) -> (model, Random.generate RandomPoint pointGenerator, Audio.cmdNone)
              
+        (Hit point ,LoadedModel lM) ->
+             (LoadedModel {lM | hitCount = lM.hitCount +1, 
+              points = (remove point lM.points)}
+             ,Cmd.none,Audio.cmdNone)
         _ ->
             ( model, Cmd.none, Audio.cmdNone )
 
-           
+
+
+--take a hit point and remove it from the list
+remove : Point -> List Point -> List Point
+remove p list =
+  case list of
+    [] -> []
+    
+    x::xs ->
+        if (x == p) then
+           xs
+        else
+            [x] ++ (remove p xs)  
         
 --SUBSCRIPTION
 subscriptions : AudioData -> Model -> Sub Msg
@@ -137,6 +155,7 @@ pointToCircle foo bar =
              ,cy (String.fromFloat bar.y)
              ,r "5"
              ,fill foo
+             ,onClick(Hit (bar))  
            ]
            [] 
         
@@ -164,10 +183,13 @@ view _ model =
                       Html.div
                         []
                         [ Html.button [ Html.Events.onClick PressedStop ] [ Html.text "Stop music" ]
-                        , svg
+                        , div [] 
+                          [Html.text ("Score: " ++ 
+                          (String.fromInt loadingModel.hitCount))]
+                        ,svg
                           [ width "1100"
                           , height "700"
-                          , viewBox "0 50 1100 700"
+                          , viewBox "50 50 1100 700"
                           ]
                                      
                           dots

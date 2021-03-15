@@ -7568,10 +7568,23 @@ var $author$project$Osu$pointGenerator = function () {
 	var x = A2($elm$random$Random$float, 50, 1000);
 	return A3($elm$random$Random$map2, $author$project$Osu$Point, x, y);
 }();
+var $author$project$Osu$remove = F2(
+	function (p, list) {
+		if (!list.b) {
+			return _List_Nil;
+		} else {
+			var x = list.a;
+			var xs = list.b;
+			return _Utils_eq(x, p) ? xs : _Utils_ap(
+				_List_fromArray(
+					[x]),
+				A2($author$project$Osu$remove, p, xs));
+		}
+	});
 var $author$project$Osu$update = F3(
 	function (_v0, msg, model) {
 		var _v1 = _Utils_Tuple2(msg, model);
-		_v1$7:
+		_v1$8:
 		while (true) {
 			switch (_v1.a.$) {
 				case 'RandomPoint':
@@ -7592,7 +7605,7 @@ var $author$project$Osu$update = F3(
 							$elm$core$Platform$Cmd$none,
 							$MartinSStewart$elm_audio$Audio$cmdNone);
 					} else {
-						break _v1$7;
+						break _v1$8;
 					}
 				case 'SoundLoaded':
 					if (_v1.b.$ === 'LoadingModel') {
@@ -7609,7 +7622,7 @@ var $author$project$Osu$update = F3(
 							return _Utils_Tuple3($author$project$Osu$LoadFailedModel, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
 						}
 					} else {
-						break _v1$7;
+						break _v1$8;
 					}
 				case 'PressedPlay':
 					if (_v1.b.$ === 'LoadedModel') {
@@ -7620,7 +7633,7 @@ var $author$project$Osu$update = F3(
 							A2($elm$core$Task$perform, $author$project$Osu$PressedPlayAndGotTime, $elm$time$Time$now),
 							$MartinSStewart$elm_audio$Audio$cmdNone);
 					} else {
-						break _v1$7;
+						break _v1$8;
 					}
 				case 'PressedPlayAndGotTime':
 					if (_v1.b.$ === 'LoadedModel') {
@@ -7636,7 +7649,7 @@ var $author$project$Osu$update = F3(
 							$elm$core$Platform$Cmd$none,
 							$MartinSStewart$elm_audio$Audio$cmdNone);
 					} else {
-						break _v1$7;
+						break _v1$8;
 					}
 				case 'PressedStop':
 					if (_v1.b.$ === 'LoadedModel') {
@@ -7647,7 +7660,7 @@ var $author$project$Osu$update = F3(
 							A2($elm$core$Task$perform, $author$project$Osu$PressedStopAndGotTime, $elm$time$Time$now),
 							$MartinSStewart$elm_audio$Audio$cmdNone);
 					} else {
-						break _v1$7;
+						break _v1$8;
 					}
 				case 'PressedStopAndGotTime':
 					if (_v1.b.$ === 'LoadedModel') {
@@ -7669,7 +7682,7 @@ var $author$project$Osu$update = F3(
 							return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
 						}
 					} else {
-						break _v1$7;
+						break _v1$8;
 					}
 				case 'Tick':
 					var _v7 = _v1.a;
@@ -7678,7 +7691,22 @@ var $author$project$Osu$update = F3(
 						A2($elm$random$Random$generate, $author$project$Osu$RandomPoint, $author$project$Osu$pointGenerator),
 						$MartinSStewart$elm_audio$Audio$cmdNone);
 				default:
-					break _v1$7;
+					if (_v1.b.$ === 'LoadedModel') {
+						var point = _v1.a.a;
+						var lM = _v1.b.a;
+						return _Utils_Tuple3(
+							$author$project$Osu$LoadedModel(
+								_Utils_update(
+									lM,
+									{
+										hitCount: lM.hitCount + 1,
+										points: A2($author$project$Osu$remove, point, lM.points)
+									})),
+							$elm$core$Platform$Cmd$none,
+							$MartinSStewart$elm_audio$Audio$cmdNone);
+					} else {
+						break _v1$8;
+					}
 			}
 		}
 		return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
@@ -7705,12 +7733,21 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $author$project$Osu$Hit = function (a) {
+	return {$: 'Hit', a: a};
+};
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$core$String$fromFloat = _String_fromNumber;
+var $elm$svg$Svg$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
 var $author$project$Osu$pointToCircle = F2(
 	function (foo, bar) {
@@ -7723,7 +7760,9 @@ var $author$project$Osu$pointToCircle = F2(
 					$elm$svg$Svg$Attributes$cy(
 					$elm$core$String$fromFloat(bar.y)),
 					$elm$svg$Svg$Attributes$r('5'),
-					$elm$svg$Svg$Attributes$fill(foo)
+					$elm$svg$Svg$Attributes$fill(foo),
+					$elm$svg$Svg$Events$onClick(
+					$author$project$Osu$Hit(bar))
 				]),
 			_List_Nil);
 	});
@@ -7766,12 +7805,20 @@ var $author$project$Osu$view = F2(
 										$elm$html$Html$text('Stop music')
 									])),
 								A2(
+								$elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										'Score: ' + $elm$core$String$fromInt(loadingModel.hitCount))
+									])),
+								A2(
 								$elm$svg$Svg$svg,
 								_List_fromArray(
 									[
 										$elm$svg$Svg$Attributes$width('1100'),
 										$elm$svg$Svg$Attributes$height('700'),
-										$elm$svg$Svg$Attributes$viewBox('0 50 1100 700')
+										$elm$svg$Svg$Attributes$viewBox('50 50 1100 700')
 									]),
 								dots)
 							]));
