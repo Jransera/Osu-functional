@@ -7397,7 +7397,7 @@ var $author$project$Osu$subscriptions = F2(
 	function (_v0, model) {
 		return A2(
 			$elm$time$Time$every,
-			1000,
+			500,
 			$elm$core$Basics$always($author$project$Osu$Tick));
 	});
 var $author$project$Osu$FadingOut = F2(
@@ -7586,29 +7586,9 @@ var $author$project$Osu$update = F3(
 		var _v1 = _Utils_Tuple2(msg, model);
 		_v1$8:
 		while (true) {
-			switch (_v1.a.$) {
-				case 'RandomPoint':
-					if (_v1.b.$ === 'LoadedModel') {
-						var point = _v1.a.a;
-						var loadedModel = _v1.b.a;
-						return _Utils_Tuple3(
-							$author$project$Osu$LoadedModel(
-								{
-									hitCount: loadedModel.hitCount,
-									points: _Utils_ap(
-										loadedModel.points,
-										_List_fromArray(
-											[point])),
-									sound: loadedModel.sound,
-									soundState: loadedModel.soundState
-								}),
-							$elm$core$Platform$Cmd$none,
-							$MartinSStewart$elm_audio$Audio$cmdNone);
-					} else {
-						break _v1$8;
-					}
-				case 'SoundLoaded':
-					if (_v1.b.$ === 'LoadingModel') {
+			switch (_v1.b.$) {
+				case 'LoadingModel':
+					if (_v1.a.$ === 'SoundLoaded') {
 						var result = _v1.a.a;
 						var _v2 = _v1.b;
 						if (result.$ === 'Ok') {
@@ -7624,89 +7604,99 @@ var $author$project$Osu$update = F3(
 					} else {
 						break _v1$8;
 					}
-				case 'PressedPlay':
-					if (_v1.b.$ === 'LoadedModel') {
-						var _v4 = _v1.a;
-						var loadedModel = _v1.b.a;
-						return _Utils_Tuple3(
-							$author$project$Osu$LoadedModel(loadedModel),
-							A2($elm$core$Task$perform, $author$project$Osu$PressedPlayAndGotTime, $elm$time$Time$now),
-							$MartinSStewart$elm_audio$Audio$cmdNone);
-					} else {
-						break _v1$8;
-					}
-				case 'PressedPlayAndGotTime':
-					if (_v1.b.$ === 'LoadedModel') {
-						var time = _v1.a.a;
-						var loadedModel = _v1.b.a;
-						return _Utils_Tuple3(
-							$author$project$Osu$LoadedModel(
-								_Utils_update(
-									loadedModel,
+				case 'LoadedModel':
+					switch (_v1.a.$) {
+						case 'RandomPoint':
+							var point = _v1.a.a;
+							var loadedModel = _v1.b.a;
+							return _Utils_Tuple3(
+								$author$project$Osu$LoadedModel(
 									{
-										soundState: $author$project$Osu$Playing(time)
-									})),
-							$elm$core$Platform$Cmd$none,
-							$MartinSStewart$elm_audio$Audio$cmdNone);
-					} else {
-						break _v1$8;
-					}
-				case 'PressedStop':
-					if (_v1.b.$ === 'LoadedModel') {
-						var _v5 = _v1.a;
-						var loadedModel = _v1.b.a;
-						return _Utils_Tuple3(
-							$author$project$Osu$LoadedModel(loadedModel),
-							A2($elm$core$Task$perform, $author$project$Osu$PressedStopAndGotTime, $elm$time$Time$now),
-							$MartinSStewart$elm_audio$Audio$cmdNone);
-					} else {
-						break _v1$8;
-					}
-				case 'PressedStopAndGotTime':
-					if (_v1.b.$ === 'LoadedModel') {
-						var stopTime = _v1.a.a;
-						var loadedModel = _v1.b.a;
-						var _v6 = loadedModel.soundState;
-						if (_v6.$ === 'Playing') {
-							var startTime = _v6.a;
+										hitCount: loadedModel.hitCount,
+										points: _Utils_ap(
+											loadedModel.points,
+											_List_fromArray(
+												[point])),
+										sound: loadedModel.sound,
+										soundState: loadedModel.soundState
+									}),
+								$elm$core$Platform$Cmd$none,
+								$MartinSStewart$elm_audio$Audio$cmdNone);
+						case 'PressedPlay':
+							var _v4 = _v1.a;
+							var loadedModel = _v1.b.a;
+							return _Utils_Tuple3(
+								$author$project$Osu$LoadedModel(loadedModel),
+								A2($elm$core$Task$perform, $author$project$Osu$PressedPlayAndGotTime, $elm$time$Time$now),
+								$MartinSStewart$elm_audio$Audio$cmdNone);
+						case 'PressedPlayAndGotTime':
+							var time = _v1.a.a;
+							var loadedModel = _v1.b.a;
 							return _Utils_Tuple3(
 								$author$project$Osu$LoadedModel(
 									_Utils_update(
 										loadedModel,
 										{
-											soundState: A2($author$project$Osu$FadingOut, startTime, stopTime)
+											soundState: $author$project$Osu$Playing(time)
 										})),
 								$elm$core$Platform$Cmd$none,
 								$MartinSStewart$elm_audio$Audio$cmdNone);
-						} else {
-							return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
-						}
-					} else {
-						break _v1$8;
+						case 'PressedStop':
+							var _v5 = _v1.a;
+							var loadedModel = _v1.b.a;
+							return _Utils_Tuple3(
+								$author$project$Osu$LoadedModel(loadedModel),
+								A2($elm$core$Task$perform, $author$project$Osu$PressedStopAndGotTime, $elm$time$Time$now),
+								$MartinSStewart$elm_audio$Audio$cmdNone);
+						case 'PressedStopAndGotTime':
+							var stopTime = _v1.a.a;
+							var loadedModel = _v1.b.a;
+							var _v6 = loadedModel.soundState;
+							if (_v6.$ === 'Playing') {
+								var startTime = _v6.a;
+								return _Utils_Tuple3(
+									$author$project$Osu$LoadedModel(
+										_Utils_update(
+											loadedModel,
+											{
+												soundState: A2($author$project$Osu$FadingOut, startTime, stopTime)
+											})),
+									$elm$core$Platform$Cmd$none,
+									$MartinSStewart$elm_audio$Audio$cmdNone);
+							} else {
+								return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
+							}
+						case 'Tick':
+							var _v7 = _v1.a;
+							var lm = _v1.b.a;
+							var _v8 = lm.soundState;
+							if (_v8.$ === 'Playing') {
+								var time = _v8.a;
+								return _Utils_Tuple3(
+									model,
+									A2($elm$random$Random$generate, $author$project$Osu$RandomPoint, $author$project$Osu$pointGenerator),
+									$MartinSStewart$elm_audio$Audio$cmdNone);
+							} else {
+								return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
+							}
+						case 'Hit':
+							var point = _v1.a.a;
+							var lM = _v1.b.a;
+							return _Utils_Tuple3(
+								$author$project$Osu$LoadedModel(
+									_Utils_update(
+										lM,
+										{
+											hitCount: lM.hitCount + 1,
+											points: A2($author$project$Osu$remove, point, lM.points)
+										})),
+								$elm$core$Platform$Cmd$none,
+								$MartinSStewart$elm_audio$Audio$cmdNone);
+						default:
+							break _v1$8;
 					}
-				case 'Tick':
-					var _v7 = _v1.a;
-					return _Utils_Tuple3(
-						model,
-						A2($elm$random$Random$generate, $author$project$Osu$RandomPoint, $author$project$Osu$pointGenerator),
-						$MartinSStewart$elm_audio$Audio$cmdNone);
 				default:
-					if (_v1.b.$ === 'LoadedModel') {
-						var point = _v1.a.a;
-						var lM = _v1.b.a;
-						return _Utils_Tuple3(
-							$author$project$Osu$LoadedModel(
-								_Utils_update(
-									lM,
-									{
-										hitCount: lM.hitCount + 1,
-										points: A2($author$project$Osu$remove, point, lM.points)
-									})),
-							$elm$core$Platform$Cmd$none,
-							$MartinSStewart$elm_audio$Audio$cmdNone);
-					} else {
-						break _v1$8;
-					}
+					break _v1$8;
 			}
 		}
 		return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);

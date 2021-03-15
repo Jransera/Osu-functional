@@ -110,7 +110,12 @@ update _ msg model =
                 _ ->
                     ( model, Cmd.none, Audio.cmdNone )
         
-        (Tick,_) -> (model, Random.generate RandomPoint pointGenerator, Audio.cmdNone)
+        (Tick,LoadedModel lm) ->
+          case lm.soundState of
+             Playing time ->
+                 (model, Random.generate RandomPoint pointGenerator, 
+                 Audio.cmdNone)
+             _ -> (model,Cmd.none,Audio.cmdNone)
              
         (Hit point ,LoadedModel lM) ->
              (LoadedModel {lM | hitCount = lM.hitCount +1, 
