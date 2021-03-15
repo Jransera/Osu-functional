@@ -7564,8 +7564,8 @@ var $elm$random$Random$map2 = F3(
 			});
 	});
 var $author$project$Osu$pointGenerator = function () {
-	var y = A2($elm$random$Random$float, 100, 600);
-	var x = A2($elm$random$Random$float, 100, 1100);
+	var y = A2($elm$random$Random$float, 100, 450);
+	var x = A2($elm$random$Random$float, 100, 1000);
 	return A3($elm$random$Random$map2, $author$project$Osu$Point, x, y);
 }();
 var $author$project$Osu$remove = F2(
