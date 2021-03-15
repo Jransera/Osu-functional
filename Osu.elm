@@ -136,15 +136,15 @@ remove p list =
 --SUBSCRIPTION
 subscriptions : AudioData -> Model -> Sub Msg
 subscriptions _ model =
-    Time.every 500 (always Tick)
+    Time.every 1000 (always Tick)
 
 
-
+--creates a random point
 pointGenerator : Generator Point
 pointGenerator =
   let
-    x = ( Random.float 50 1000) 
-    y = ( Random.float 50 600)
+    x = ( Random.float 100 700) 
+    y = ( Random.float 100 500)
   in
     Random.map2 Point x y 
 
@@ -153,7 +153,7 @@ pointToCircle: String -> Point -> Svg Msg
 pointToCircle foo bar = 
     circle [ cx (String.fromFloat bar.x)
              ,cy (String.fromFloat bar.y)
-             ,r "5"
+             ,r "10"
              ,fill foo
              ,onClick(Hit (bar))  
            ]
@@ -164,7 +164,16 @@ pointToCircles colors points =
     List.map (pointToCircle colors) points
 
 
-
+buildBoard : Svg Msg
+buildBoard = 
+    rect [ x "90"
+        , y "90"
+        , width  "620"
+        , height "420"
+        ,fill "white"
+        ,stroke "red"
+        ,strokeWidth "3"] []
+                                    
 
 -- VIEW
 
@@ -178,8 +187,12 @@ view _ model =
                 Playing _ ->
                     let 
                        list = loadingModel.points
-                       dots = pointToCircles "red" list
-                     in
+                       dots = pointToCircles "black" list
+                       board = buildBoard 
+                                    
+                                
+                       totalRender = [board] ++ dots
+                      in
                       Html.div
                         []
                         [ Html.button [ Html.Events.onClick PressedStop ] [ Html.text "Stop music" ]
@@ -192,7 +205,7 @@ view _ model =
                           , viewBox "50 50 1100 700"
                           ]
                                      
-                          dots
+                          totalRender
                                                 
                                                   
                             

@@ -7397,7 +7397,7 @@ var $author$project$Osu$subscriptions = F2(
 	function (_v0, model) {
 		return A2(
 			$elm$time$Time$every,
-			500,
+			1000,
 			$elm$core$Basics$always($author$project$Osu$Tick));
 	});
 var $author$project$Osu$FadingOut = F2(
@@ -7564,8 +7564,8 @@ var $elm$random$Random$map2 = F3(
 			});
 	});
 var $author$project$Osu$pointGenerator = function () {
-	var y = A2($elm$random$Random$float, 50, 600);
-	var x = A2($elm$random$Random$float, 50, 1000);
+	var y = A2($elm$random$Random$float, 100, 500);
+	var x = A2($elm$random$Random$float, 100, 700);
 	return A3($elm$random$Random$map2, $author$project$Osu$Point, x, y);
 }();
 var $author$project$Osu$remove = F2(
@@ -7713,9 +7713,30 @@ var $author$project$Osu$update = F3(
 	});
 var $author$project$Osu$PressedPlay = {$: 'PressedPlay'};
 var $author$project$Osu$PressedStop = {$: 'PressedStop'};
+var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
+var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var $elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var $author$project$Osu$buildBoard = A2(
+	$elm$svg$Svg$rect,
+	_List_fromArray(
+		[
+			$elm$svg$Svg$Attributes$x('90'),
+			$elm$svg$Svg$Attributes$y('90'),
+			$elm$svg$Svg$Attributes$width('620'),
+			$elm$svg$Svg$Attributes$height('420'),
+			$elm$svg$Svg$Attributes$fill('white'),
+			$elm$svg$Svg$Attributes$stroke('red'),
+			$elm$svg$Svg$Attributes$strokeWidth('3')
+		]),
+	_List_Nil);
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -7736,11 +7757,9 @@ var $elm$html$Html$Events$onClick = function (msg) {
 var $author$project$Osu$Hit = function (a) {
 	return {$: 'Hit', a: a};
 };
-var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
-var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$svg$Svg$Events$onClick = function (msg) {
 	return A2(
@@ -7759,7 +7778,7 @@ var $author$project$Osu$pointToCircle = F2(
 					$elm$core$String$fromFloat(bar.x)),
 					$elm$svg$Svg$Attributes$cy(
 					$elm$core$String$fromFloat(bar.y)),
-					$elm$svg$Svg$Attributes$r('5'),
+					$elm$svg$Svg$Attributes$r('10'),
 					$elm$svg$Svg$Attributes$fill(foo),
 					$elm$svg$Svg$Events$onClick(
 					$author$project$Osu$Hit(bar))
@@ -7777,7 +7796,6 @@ var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $author$project$Osu$view = F2(
 	function (_v0, model) {
 		switch (model.$) {
@@ -7788,7 +7806,12 @@ var $author$project$Osu$view = F2(
 				var _v2 = loadingModel.soundState;
 				if (_v2.$ === 'Playing') {
 					var list = loadingModel.points;
-					var dots = A2($author$project$Osu$pointToCircles, 'red', list);
+					var dots = A2($author$project$Osu$pointToCircles, 'black', list);
+					var board = $author$project$Osu$buildBoard;
+					var totalRender = _Utils_ap(
+						_List_fromArray(
+							[board]),
+						dots);
 					return A2(
 						$elm$html$Html$div,
 						_List_Nil,
@@ -7820,7 +7843,7 @@ var $author$project$Osu$view = F2(
 										$elm$svg$Svg$Attributes$height('700'),
 										$elm$svg$Svg$Attributes$viewBox('50 50 1100 700')
 									]),
-								dots)
+								totalRender)
 							]));
 				} else {
 					return A2(
