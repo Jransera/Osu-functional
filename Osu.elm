@@ -151,8 +151,8 @@ subscriptions _ model =
 pointGenerator : Generator Point
 pointGenerator =
   let
-    x = ( Random.float 100 700) 
-    y = ( Random.float 100 500)
+    x = ( Random.float 100 1100) 
+    y = ( Random.float 100 600)
   in
     Random.map2 Point x y 
 
@@ -177,8 +177,8 @@ buildBoard : Svg Msg
 buildBoard = 
     rect [ x "90"
         , y "90"
-        , width  "620"
-        , height "420"
+        , width  "1000"
+        , height "500"
         ,fill "white"
         ,stroke "purple"
         ,strokeWidth "3"
@@ -208,7 +208,7 @@ view _ model =
                         []
                         [ Html.button ([ Html.Events.onClick PressedStop] ++ endButtonStyle) [ Html.text "End Game" ]
                         , div [Html.Attributes.style "font" "30px Verdana, sans-serif"
-                          , Html.Attributes.style "padding" "35 0 10 275"] 
+                          , Html.Attributes.style "padding" "35 0 10 465"] 
                           [Html.text ("Score: " ++ 
                           (String.fromInt loadingModel.hitCount))]
                         , svg
@@ -216,12 +216,7 @@ view _ model =
                           , height "700"
                           , viewBox "50 50 1100 700"
                           ]
-                                     
-                          totalRender
-                                                
-                                                  
-                            
-                          
+                          totalRender       
                         ]
                 _ ->
                     Html.div
@@ -276,7 +271,7 @@ endButtonStyle =
     , Html.Attributes.style "background-color" "#fae5fc"
     , Html.Attributes.style "color" "purple"
     , Html.Attributes.style "margin-top" "10px"
-    , Html.Attributes.style "margin-left" "190px"
+    , Html.Attributes.style "margin-left" "380px"
     , Html.Attributes.style "border-color" "purple"
     , Html.Attributes.style "border-width" "2px"
     , Html.Attributes.style "border-radius" "8px"

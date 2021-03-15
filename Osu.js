@@ -7564,8 +7564,8 @@ var $elm$random$Random$map2 = F3(
 			});
 	});
 var $author$project$Osu$pointGenerator = function () {
-	var y = A2($elm$random$Random$float, 100, 500);
-	var x = A2($elm$random$Random$float, 100, 700);
+	var y = A2($elm$random$Random$float, 100, 600);
+	var x = A2($elm$random$Random$float, 100, 1100);
 	return A3($elm$random$Random$map2, $author$project$Osu$Point, x, y);
 }();
 var $author$project$Osu$remove = F2(
@@ -7720,8 +7720,8 @@ var $author$project$Osu$buildBoard = A2(
 		[
 			$elm$svg$Svg$Attributes$x('90'),
 			$elm$svg$Svg$Attributes$y('90'),
-			$elm$svg$Svg$Attributes$width('620'),
-			$elm$svg$Svg$Attributes$height('420'),
+			$elm$svg$Svg$Attributes$width('1000'),
+			$elm$svg$Svg$Attributes$height('500'),
 			$elm$svg$Svg$Attributes$fill('white'),
 			$elm$svg$Svg$Attributes$stroke('purple'),
 			$elm$svg$Svg$Attributes$strokeWidth('3'),
@@ -7739,7 +7739,7 @@ var $author$project$Osu$endButtonStyle = _List_fromArray(
 		A2($elm$html$Html$Attributes$style, 'background-color', '#fae5fc'),
 		A2($elm$html$Html$Attributes$style, 'color', 'purple'),
 		A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
-		A2($elm$html$Html$Attributes$style, 'margin-left', '190px'),
+		A2($elm$html$Html$Attributes$style, 'margin-left', '380px'),
 		A2($elm$html$Html$Attributes$style, 'border-color', 'purple'),
 		A2($elm$html$Html$Attributes$style, 'border-width', '2px'),
 		A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
@@ -7856,7 +7856,7 @@ var $author$project$Osu$view = F2(
 								_List_fromArray(
 									[
 										A2($elm$html$Html$Attributes$style, 'font', '30px Verdana, sans-serif'),
-										A2($elm$html$Html$Attributes$style, 'padding', '35 0 10 275')
+										A2($elm$html$Html$Attributes$style, 'padding', '35 0 10 465')
 									]),
 								_List_fromArray(
 									[
