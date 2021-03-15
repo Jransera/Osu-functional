@@ -281,9 +281,9 @@ view _ model =
                                      loadingModel.goal)) then
                                [loss]
                             
-                           else if ((List.length loadingModel.map) == 0) 
-                                   then
-                              [board] ++ endDots
+                           --else if ((List.length loadingModel.map) == 0) 
+                                --   then
+                              --[board] ++ endDots
                              
                            else
                                [board] ++dots  

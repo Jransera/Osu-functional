@@ -7744,13 +7744,10 @@ var $author$project$Osu$view = F2(
 					var board = $author$project$Osu$buildBoard;
 					var totalRender = _Utils_eq(loadingModel.goal, loadingModel.hitCount) ? _List_fromArray(
 						[win]) : (((!$elm$core$List$length(loadingModel.map)) && (_Utils_cmp(loadingModel.hitCount + 1, loadingModel.goal) < 0)) ? _List_fromArray(
-						[loss]) : ((!$elm$core$List$length(loadingModel.map)) ? _Utils_ap(
+						[loss]) : _Utils_ap(
 						_List_fromArray(
 							[board]),
-						endDots) : _Utils_ap(
-						_List_fromArray(
-							[board]),
-						dots)));
+						dots));
 					return A2(
 						$elm$html$Html$div,
 						_List_Nil,
