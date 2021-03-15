@@ -27,6 +27,7 @@ type alias LoadedModel_ =
     , soundState : SoundState
     , hitCount : Int
     , points : List Point
+    , map : List Point 
     }
 
 
@@ -70,16 +71,19 @@ init _ =
 update : AudioData -> Msg -> Model -> ( Model, Cmd Msg, AudioCmd Msg )
 update _ msg model =
     case ( msg, model ) of
-        (RandomPoint point,LoadedModel loadedModel) ->
-           ( LoadedModel {sound = loadedModel.sound, soundState = loadedModel.soundState, 
-            hitCount = loadedModel.hitCount, points = loadedModel.points ++[point]}
-             ,Cmd.none
-             ,Audio.cmdNone)      
+      --  (RandomPoint point,LoadedModel loadedModel) ->
+      --     ( LoadedModel {sound = loadedModel.sound, 
+      --       soundState = loadedModel.soundState, 
+      --       hitCount = loadedModel.hitCount, 
+      --       points = loadedModel.points ++[point]}
+      --    ,Cmd.none
+      --    ,Audio.cmdNone)     not needed anymore but keep for now 
 
         ( SoundLoaded result, LoadingModel ) ->
             case result of
                 Ok sound ->
-                    ( LoadedModel { sound = sound, soundState = NotPlaying, hitCount = 0, points = []}
+                    ( LoadedModel { sound = sound, soundState = NotPlaying,
+                     hitCount = 0, points = [],map = mapInit}
                     , Cmd.none
                     , Audio.cmdNone
                     )
@@ -117,8 +121,11 @@ update _ msg model =
         (Tick,LoadedModel lm) ->
           case lm.soundState of
              Playing time ->
-                 (model, Random.generate RandomPoint pointGenerator, 
-                 Audio.cmdNone)
+                 (LoadedModel {lm | points = List.take 1 lm.map, 
+                  map = List.drop 1 lm.map} 
+                 , Cmd.none 
+                 ,Audio.cmdNone)
+
              _ -> (model,Cmd.none,Audio.cmdNone)
              
         (Hit point ,LoadedModel lM) ->
@@ -155,13 +162,13 @@ subscriptions _ model =
 
 
 --creates a random point
-pointGenerator : Generator Point
-pointGenerator =
-  let
-    x = ( Random.float 100 1080) 
-    y = ( Random.float 100 580)
-  in
-    Random.map2 Point x y 
+--pointGenerator : Generator Point
+--pointGenerator =
+  --let
+    --x = ( Random.float 100 1080) 
+    --y = ( Random.float 100 580)
+  --in
+    --Random.map2 Point x y 
 
 
 
@@ -326,3 +333,24 @@ startButtonStyle =
     , Html.Attributes.style "font" "50px Verdana, sans-serif"
     , Html.Attributes.style "padding" "50 80 50 80"
     ]
+
+
+
+--putting this down here because i cant find a way to easily parse in outside files that will allow me to do this cleanly.
+
+---MapINIT
+mapInit : List Point
+mapInit = 
+   [ Point 490.0 240.0
+    ,Point 495.0 245.0
+    ,Point 480.0 230.0
+    ,Point 490.0 230.0
+    ,Point 480.0 240.0
+    ,Point 495.0 230.0
+    ,Point 590.0 340.0
+    ,Point 490.0 240.0
+    ,Point 490.0 240.0
+   ] 
+
+
+

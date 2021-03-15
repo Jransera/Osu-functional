@@ -4401,43 +4401,6 @@ function _Time_getZoneName()
 		callback(_Scheduler_succeed(name));
 	});
 }
-
-
-
-var _Bitwise_and = F2(function(a, b)
-{
-	return a & b;
-});
-
-var _Bitwise_or = F2(function(a, b)
-{
-	return a | b;
-});
-
-var _Bitwise_xor = F2(function(a, b)
-{
-	return a ^ b;
-});
-
-function _Bitwise_complement(a)
-{
-	return ~a;
-};
-
-var _Bitwise_shiftLeftBy = F2(function(offset, a)
-{
-	return a << offset;
-});
-
-var _Bitwise_shiftRightBy = F2(function(offset, a)
-{
-	return a >> offset;
-});
-
-var _Bitwise_shiftRightZfBy = F2(function(offset, a)
-{
-	return a >>> offset;
-});
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
@@ -7418,156 +7381,26 @@ var $author$project$Osu$PressedPlayAndGotTime = function (a) {
 var $author$project$Osu$PressedStopAndGotTime = function (a) {
 	return {$: 'PressedStopAndGotTime', a: a};
 };
-var $author$project$Osu$RandomPoint = function (a) {
-	return {$: 'RandomPoint', a: a};
-};
 var $MartinSStewart$elm_audio$Audio$AudioCmdGroup = function (a) {
 	return {$: 'AudioCmdGroup', a: a};
 };
 var $MartinSStewart$elm_audio$Audio$cmdNone = $MartinSStewart$elm_audio$Audio$AudioCmdGroup(_List_Nil);
-var $elm$random$Random$Generate = function (a) {
-	return {$: 'Generate', a: a};
-};
-var $elm$random$Random$Seed = F2(
-	function (a, b) {
-		return {$: 'Seed', a: a, b: b};
-	});
-var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
-var $elm$random$Random$next = function (_v0) {
-	var state0 = _v0.a;
-	var incr = _v0.b;
-	return A2($elm$random$Random$Seed, ((state0 * 1664525) + incr) >>> 0, incr);
-};
-var $elm$random$Random$initialSeed = function (x) {
-	var _v0 = $elm$random$Random$next(
-		A2($elm$random$Random$Seed, 0, 1013904223));
-	var state1 = _v0.a;
-	var incr = _v0.b;
-	var state2 = (state1 + x) >>> 0;
-	return $elm$random$Random$next(
-		A2($elm$random$Random$Seed, state2, incr));
-};
-var $elm$random$Random$init = A2(
-	$elm$core$Task$andThen,
-	function (time) {
-		return $elm$core$Task$succeed(
-			$elm$random$Random$initialSeed(
-				$elm$time$Time$posixToMillis(time)));
-	},
-	$elm$time$Time$now);
-var $elm$random$Random$step = F2(
-	function (_v0, seed) {
-		var generator = _v0.a;
-		return generator(seed);
-	});
-var $elm$random$Random$onEffects = F3(
-	function (router, commands, seed) {
-		if (!commands.b) {
-			return $elm$core$Task$succeed(seed);
-		} else {
-			var generator = commands.a.a;
-			var rest = commands.b;
-			var _v1 = A2($elm$random$Random$step, generator, seed);
-			var value = _v1.a;
-			var newSeed = _v1.b;
-			return A2(
-				$elm$core$Task$andThen,
-				function (_v2) {
-					return A3($elm$random$Random$onEffects, router, rest, newSeed);
-				},
-				A2($elm$core$Platform$sendToApp, router, value));
-		}
-	});
-var $elm$random$Random$onSelfMsg = F3(
-	function (_v0, _v1, seed) {
-		return $elm$core$Task$succeed(seed);
-	});
-var $elm$random$Random$Generator = function (a) {
-	return {$: 'Generator', a: a};
-};
-var $elm$random$Random$map = F2(
-	function (func, _v0) {
-		var genA = _v0.a;
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var _v1 = genA(seed0);
-				var a = _v1.a;
-				var seed1 = _v1.b;
-				return _Utils_Tuple2(
-					func(a),
-					seed1);
-			});
-	});
-var $elm$random$Random$cmdMap = F2(
-	function (func, _v0) {
-		var generator = _v0.a;
-		return $elm$random$Random$Generate(
-			A2($elm$random$Random$map, func, generator));
-	});
-_Platform_effectManagers['Random'] = _Platform_createManager($elm$random$Random$init, $elm$random$Random$onEffects, $elm$random$Random$onSelfMsg, $elm$random$Random$cmdMap);
-var $elm$random$Random$command = _Platform_leaf('Random');
-var $elm$random$Random$generate = F2(
-	function (tagger, generator) {
-		return $elm$random$Random$command(
-			$elm$random$Random$Generate(
-				A2($elm$random$Random$map, tagger, generator)));
-	});
 var $author$project$Osu$Point = F2(
 	function (x, y) {
 		return {x: x, y: y};
 	});
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var $elm$core$Basics$abs = function (n) {
-	return (n < 0) ? (-n) : n;
-};
-var $elm$core$Bitwise$and = _Bitwise_and;
-var $elm$core$Bitwise$xor = _Bitwise_xor;
-var $elm$random$Random$peel = function (_v0) {
-	var state = _v0.a;
-	var word = (state ^ (state >>> ((state >>> 28) + 4))) * 277803737;
-	return ((word >>> 22) ^ word) >>> 0;
-};
-var $elm$random$Random$float = F2(
-	function (a, b) {
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var seed1 = $elm$random$Random$next(seed0);
-				var range = $elm$core$Basics$abs(b - a);
-				var n1 = $elm$random$Random$peel(seed1);
-				var n0 = $elm$random$Random$peel(seed0);
-				var lo = (134217727 & n1) * 1.0;
-				var hi = (67108863 & n0) * 1.0;
-				var val = ((hi * 134217728.0) + lo) / 9007199254740992.0;
-				var scaled = (val * range) + a;
-				return _Utils_Tuple2(
-					scaled,
-					$elm$random$Random$next(seed1));
-			});
-	});
-var $elm$random$Random$map2 = F3(
-	function (func, _v0, _v1) {
-		var genA = _v0.a;
-		var genB = _v1.a;
-		return $elm$random$Random$Generator(
-			function (seed0) {
-				var _v2 = genA(seed0);
-				var a = _v2.a;
-				var seed1 = _v2.b;
-				var _v3 = genB(seed1);
-				var b = _v3.a;
-				var seed2 = _v3.b;
-				return _Utils_Tuple2(
-					A2(func, a, b),
-					seed2);
-			});
-	});
-var $author$project$Osu$pointGenerator = function () {
-	var y = A2($elm$random$Random$float, 100, 580);
-	var x = A2($elm$random$Random$float, 100, 1080);
-	return A3($elm$random$Random$map2, $author$project$Osu$Point, x, y);
-}();
+var $author$project$Osu$mapInit = _List_fromArray(
+	[
+		A2($author$project$Osu$Point, 490.0, 240.0),
+		A2($author$project$Osu$Point, 490.0, 240.0),
+		A2($author$project$Osu$Point, 490.0, 240.0),
+		A2($author$project$Osu$Point, 490.0, 240.0),
+		A2($author$project$Osu$Point, 490.0, 240.0),
+		A2($author$project$Osu$Point, 490.0, 240.0),
+		A2($author$project$Osu$Point, 490.0, 240.0),
+		A2($author$project$Osu$Point, 490.0, 240.0),
+		A2($author$project$Osu$Point, 490.0, 240.0)
+	]);
 var $author$project$Osu$remove = F2(
 	function (p, list) {
 		if (!list.b) {
@@ -7584,7 +7417,7 @@ var $author$project$Osu$remove = F2(
 var $author$project$Osu$update = F3(
 	function (_v0, msg, model) {
 		var _v1 = _Utils_Tuple2(msg, model);
-		_v1$9:
+		_v1$8:
 		while (true) {
 			switch (_v1.b.$) {
 				case 'LoadingModel':
@@ -7595,33 +7428,17 @@ var $author$project$Osu$update = F3(
 							var sound = result.a;
 							return _Utils_Tuple3(
 								$author$project$Osu$LoadedModel(
-									{hitCount: 0, points: _List_Nil, sound: sound, soundState: $author$project$Osu$NotPlaying}),
+									{hitCount: 0, map: $author$project$Osu$mapInit, points: _List_Nil, sound: sound, soundState: $author$project$Osu$NotPlaying}),
 								$elm$core$Platform$Cmd$none,
 								$MartinSStewart$elm_audio$Audio$cmdNone);
 						} else {
 							return _Utils_Tuple3($author$project$Osu$LoadFailedModel, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
 						}
 					} else {
-						break _v1$9;
+						break _v1$8;
 					}
 				case 'LoadedModel':
 					switch (_v1.a.$) {
-						case 'RandomPoint':
-							var point = _v1.a.a;
-							var loadedModel = _v1.b.a;
-							return _Utils_Tuple3(
-								$author$project$Osu$LoadedModel(
-									{
-										hitCount: loadedModel.hitCount,
-										points: _Utils_ap(
-											loadedModel.points,
-											_List_fromArray(
-												[point])),
-										sound: loadedModel.sound,
-										soundState: loadedModel.soundState
-									}),
-								$elm$core$Platform$Cmd$none,
-								$MartinSStewart$elm_audio$Audio$cmdNone);
 						case 'PressedPlay':
 							var _v4 = _v1.a;
 							var loadedModel = _v1.b.a;
@@ -7673,8 +7490,14 @@ var $author$project$Osu$update = F3(
 							if (_v8.$ === 'Playing') {
 								var time = _v8.a;
 								return _Utils_Tuple3(
-									model,
-									A2($elm$random$Random$generate, $author$project$Osu$RandomPoint, $author$project$Osu$pointGenerator),
+									$author$project$Osu$LoadedModel(
+										_Utils_update(
+											lm,
+											{
+												map: A2($elm$core$List$drop, 1, lm.map),
+												points: A2($elm$core$List$take, 1, lm.map)
+											})),
+									$elm$core$Platform$Cmd$none,
 									$MartinSStewart$elm_audio$Audio$cmdNone);
 							} else {
 								return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
@@ -7703,10 +7526,10 @@ var $author$project$Osu$update = F3(
 								A2($elm$core$Task$perform, $author$project$Osu$PressedStopAndGotTime, $elm$time$Time$now),
 								$MartinSStewart$elm_audio$Audio$cmdNone);
 						default:
-							break _v1$9;
+							break _v1$8;
 					}
 				default:
-					break _v1$9;
+					break _v1$8;
 			}
 		}
 		return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
