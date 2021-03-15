@@ -151,8 +151,8 @@ subscriptions _ model =
 pointGenerator : Generator Point
 pointGenerator =
   let
-    x = ( Random.float 100 1050) 
-    y = ( Random.float 100 480)
+    x = ( Random.float 100 1080) 
+    y = ( Random.float 100 580)
   in
     Random.map2 Point x y 
 
