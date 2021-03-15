@@ -7391,18 +7391,26 @@ var $author$project$Osu$Point = F2(
 	});
 var $author$project$Osu$mapInit = _List_fromArray(
 	[
-		A2($author$project$Osu$Point, 590.0, 340.0),
-		A2($author$project$Osu$Point, 495.0, 245.0),
-		A2($author$project$Osu$Point, 480.0, 230.0),
-		A2($author$project$Osu$Point, 490.0, 230.0),
-		A2($author$project$Osu$Point, 480.0, 240.0),
-		A2($author$project$Osu$Point, 495.0, 230.0),
-		A2($author$project$Osu$Point, 590.0, 340.0),
-		A2($author$project$Osu$Point, 490.0, 240.0),
-		A2($author$project$Osu$Point, 490.0, 240.0),
-		A2($author$project$Osu$Point, 590.0, 340.0),
-		A2($author$project$Osu$Point, 600.0, 200.0),
-		A2($author$project$Osu$Point, 200.0, 185.0)
+		A2($author$project$Osu$Point, 590.0, 154.0),
+		A2($author$project$Osu$Point, 915.0, 300.0),
+		A2($author$project$Osu$Point, 342.0, 488.0),
+		A2($author$project$Osu$Point, 720.0, 369.0),
+		A2($author$project$Osu$Point, 1020.0, 580.0),
+		A2($author$project$Osu$Point, 600.0, 443.0),
+		A2($author$project$Osu$Point, 365.0, 136.0),
+		A2($author$project$Osu$Point, 444.0, 152.0),
+		A2($author$project$Osu$Point, 515.0, 382.0),
+		A2($author$project$Osu$Point, 1079.0, 532.0),
+		A2($author$project$Osu$Point, 101.0, 500.0),
+		A2($author$project$Osu$Point, 665.0, 457.0),
+		A2($author$project$Osu$Point, 1063.0, 332.0),
+		A2($author$project$Osu$Point, 811.0, 491.0),
+		A2($author$project$Osu$Point, 905.0, 202.0),
+		A2($author$project$Osu$Point, 1041.0, 394.0),
+		A2($author$project$Osu$Point, 201.0, 122.0),
+		A2($author$project$Osu$Point, 511.0, 326.0),
+		A2($author$project$Osu$Point, 930.0, 221.0),
+		A2($author$project$Osu$Point, 530.0, 376.0)
 	]);
 var $author$project$Osu$remove = F2(
 	function (p, list) {
@@ -7431,7 +7439,14 @@ var $author$project$Osu$update = F3(
 							var sound = result.a;
 							return _Utils_Tuple3(
 								$author$project$Osu$LoadedModel(
-									{hitCount: 0, map: $author$project$Osu$mapInit, points: _List_Nil, sound: sound, soundState: $author$project$Osu$NotPlaying}),
+									{
+										goal: $elm$core$List$length($author$project$Osu$mapInit),
+										hitCount: 0,
+										map: $author$project$Osu$mapInit,
+										points: _List_Nil,
+										sound: sound,
+										soundState: $author$project$Osu$NotPlaying
+									}),
 								$elm$core$Platform$Cmd$none,
 								$MartinSStewart$elm_audio$Audio$cmdNone);
 						} else {
@@ -7567,6 +7582,55 @@ var $author$project$Osu$buildBoard = A2(
 			$elm$svg$Svg$Attributes$ry('10px')
 		]),
 	_List_Nil);
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$svg$Svg$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $author$project$Osu$buildLoss = A2(
+	$elm$svg$Svg$rect,
+	_List_fromArray(
+		[
+			$elm$svg$Svg$Attributes$x('90'),
+			$elm$svg$Svg$Attributes$y('90'),
+			$elm$svg$Svg$Attributes$width('1080'),
+			$elm$svg$Svg$Attributes$height('580'),
+			$elm$svg$Svg$Attributes$fill('Red'),
+			$elm$svg$Svg$Attributes$stroke('Red'),
+			$elm$svg$Svg$Attributes$strokeWidth('3'),
+			$elm$svg$Svg$Attributes$rx('10px'),
+			$elm$svg$Svg$Attributes$ry('10px'),
+			$elm$svg$Svg$Events$onClick($author$project$Osu$EndGame)
+		]),
+	_List_Nil);
+var $author$project$Osu$buildWin = A2(
+	$elm$svg$Svg$rect,
+	_List_fromArray(
+		[
+			$elm$svg$Svg$Attributes$x('90'),
+			$elm$svg$Svg$Attributes$y('90'),
+			$elm$svg$Svg$Attributes$width('1080'),
+			$elm$svg$Svg$Attributes$height('580'),
+			$elm$svg$Svg$Attributes$fill('Green'),
+			$elm$svg$Svg$Attributes$stroke('Green'),
+			$elm$svg$Svg$Attributes$strokeWidth('3'),
+			$elm$svg$Svg$Attributes$rx('10px'),
+			$elm$svg$Svg$Attributes$ry('10px'),
+			$elm$svg$Svg$Events$onClick($author$project$Osu$EndGame)
+		]),
+	_List_Nil);
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
@@ -7588,23 +7652,6 @@ var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
 var $elm$core$String$fromFloat = _String_fromNumber;
-var $elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var $elm$svg$Svg$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
 var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
 var $author$project$Osu$endPointsToCircle = F2(
 	function (foo, bar) {
@@ -7689,17 +7736,21 @@ var $author$project$Osu$view = F2(
 				var loadingModel = model.a;
 				var _v2 = loadingModel.soundState;
 				if (_v2.$ === 'Playing') {
+					var win = $author$project$Osu$buildWin;
+					var loss = $author$project$Osu$buildLoss;
 					var list = loadingModel.points;
 					var endDots = A2($author$project$Osu$endCircles, '#fae5fc', list);
 					var dots = A2($author$project$Osu$pointToCircles, '#fae5fc', list);
 					var board = $author$project$Osu$buildBoard;
-					var totalRender = (!$elm$core$List$length(loadingModel.map)) ? _Utils_ap(
+					var totalRender = _Utils_eq(loadingModel.goal, loadingModel.hitCount) ? _List_fromArray(
+						[win]) : (((!$elm$core$List$length(loadingModel.map)) && (_Utils_cmp(loadingModel.hitCount + 1, loadingModel.goal) < 0)) ? _List_fromArray(
+						[loss]) : ((!$elm$core$List$length(loadingModel.map)) ? _Utils_ap(
 						_List_fromArray(
 							[board]),
 						endDots) : _Utils_ap(
 						_List_fromArray(
 							[board]),
-						dots);
+						dots)));
 					return A2(
 						$elm$html$Html$div,
 						_List_Nil,

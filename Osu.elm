@@ -28,6 +28,7 @@ type alias LoadedModel_ =
     , hitCount : Int
     , points : List Point
     , map : List Point 
+    ,goal : Int
     }
 
 
@@ -83,7 +84,8 @@ update _ msg model =
             case result of
                 Ok sound ->
                     ( LoadedModel { sound = sound, soundState = NotPlaying,
-                     hitCount = 0, points = [],map = mapInit}
+                     hitCount = 0, points = [],map = mapInit
+                     ,goal = List.length mapInit}
                     , Cmd.none
                     , Audio.cmdNone
                     )
@@ -221,8 +223,33 @@ buildBoard =
         ,rx "10px"
         ,ry "10px"] []
                           
-          
+buildWin :Svg Msg
+buildWin =
+    rect [ x "90"
+        , y "90"
+        , width  "1080"
+        , height "580"
+        ,fill "Green"
+        ,stroke "Green"
+        ,strokeWidth "3"
+        ,rx "10px"
+        ,ry "10px"
+        ,onClick (EndGame)] []
 
+
+buildLoss :Svg Msg
+buildLoss =     
+   rect [ x "90"
+        , y "90"
+        , width  "1080"
+        , height "580"
+        ,fill "Red"
+        ,stroke "Red"
+        ,strokeWidth "3"
+        ,rx "10px"
+        ,ry "10px"
+        ,onClick (EndGame)] []
+ 
 -- VIEW
 
 view : AudioData -> Model -> Html Msg
@@ -239,11 +266,26 @@ view _ model =
                          dots = pointToCircles "#fae5fc" list
                     
                          endDots = endCircles "#fae5fc" list
-                         board = buildBoard 
+                         board = buildBoard
+                         win = buildWin
+                         loss = buildLoss
+                          
                          totalRender = 
-                             if ((List.length loadingModel.map) == 0) then
+                            
+                           if (loadingModel.goal ==
+                              loadingModel.hitCount) then
+                                [win]
+                                 
+                           else if ((List.length loadingModel.map) == 0
+                                     && (loadingModel.hitCount +1 < 
+                                     loadingModel.goal)) then
+                               [loss]
+                            
+                           else if ((List.length loadingModel.map) == 0) 
+                                   then
                               [board] ++ endDots
-                             else
+                             
+                           else
                                [board] ++dots  
                       in
                        Html.div
@@ -341,18 +383,26 @@ startButtonStyle =
 ---MapINIT
 mapInit : List Point
 mapInit = 
-   [ Point 590.0 340.0
-    ,Point 495.0 245.0
-    ,Point 480.0 230.0
-    ,Point 490.0 230.0
-    ,Point 480.0 240.0
-    ,Point 495.0 230.0
-    ,Point 590.0 340.0
-    ,Point 490.0 240.0
-    ,Point 490.0 240.0
-    ,Point 590.0 340.0
-    ,Point 600.0 200.0
-    ,Point 200.0 185.0
+   [ Point 590.0 154.0
+    ,Point 915.0 300.0
+    ,Point 342.0 488.0
+    ,Point 720.0 369.0
+    ,Point 1020.0 580.0
+    ,Point 600.0 443.0
+    ,Point 365.0 136.0
+    ,Point 444.0 152.0
+    ,Point 515.0 382.0
+    ,Point 1079.0 532.0
+    ,Point 101.0 500.0
+    ,Point 665.0 457.0
+    ,Point 1063.0 332.0
+    ,Point 811.0 491.0
+    ,Point 905.0 202.0
+    ,Point 1041.0 394.0
+    ,Point 201.0 122.0
+    ,Point 511.0 326.0
+    ,Point 930.0 221.0
+    ,Point 530.0 376.0
     ] 
 
 
