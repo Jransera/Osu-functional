@@ -7397,7 +7397,7 @@ var $author$project$Osu$subscriptions = F2(
 	function (_v0, model) {
 		return A2(
 			$elm$time$Time$every,
-			500,
+			1000,
 			$elm$core$Basics$always($author$project$Osu$Tick));
 	});
 var $author$project$Osu$FadingOut = F2(
@@ -7721,12 +7721,27 @@ var $author$project$Osu$buildBoard = A2(
 			$elm$svg$Svg$Attributes$width('620'),
 			$elm$svg$Svg$Attributes$height('420'),
 			$elm$svg$Svg$Attributes$fill('white'),
-			$elm$svg$Svg$Attributes$stroke('red'),
+			$elm$svg$Svg$Attributes$stroke('purple'),
 			$elm$svg$Svg$Attributes$strokeWidth('3')
 		]),
 	_List_Nil);
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $author$project$Osu$endButtonStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'width', '300px'),
+		A2($elm$html$Html$Attributes$style, 'background-color', '#fae5fc'),
+		A2($elm$html$Html$Attributes$style, 'color', 'purple'),
+		A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
+		A2($elm$html$Html$Attributes$style, 'margin-left', '190px'),
+		A2($elm$html$Html$Attributes$style, 'border-color', 'purple'),
+		A2($elm$html$Html$Attributes$style, 'border-width', '2px'),
+		A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
+		A2($elm$html$Html$Attributes$style, 'font', '20px Verdana, sans-serif'),
+		A2($elm$html$Html$Attributes$style, 'padding', '10 10 10 10')
+	]);
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -7770,6 +7785,7 @@ var $author$project$Osu$pointToCircle = F2(
 					$elm$core$String$fromFloat(bar.y)),
 					$elm$svg$Svg$Attributes$r('10'),
 					$elm$svg$Svg$Attributes$fill(foo),
+					$elm$svg$Svg$Attributes$stroke('purple'),
 					$elm$svg$Svg$Events$onClick(
 					$author$project$Osu$Hit(bar))
 				]),
@@ -7782,6 +7798,18 @@ var $author$project$Osu$pointToCircles = F2(
 			$author$project$Osu$pointToCircle(colors),
 			points);
 	});
+var $author$project$Osu$startButtonStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'width', '500px'),
+		A2($elm$html$Html$Attributes$style, 'background-color', '#e4fccf'),
+		A2($elm$html$Html$Attributes$style, 'color', 'green'),
+		A2($elm$html$Html$Attributes$style, 'margin-top', '200px'),
+		A2($elm$html$Html$Attributes$style, 'border-color', 'green'),
+		A2($elm$html$Html$Attributes$style, 'border-width', '3px'),
+		A2($elm$html$Html$Attributes$style, 'border-radius', '12px'),
+		A2($elm$html$Html$Attributes$style, 'font', '50px Verdana, sans-serif'),
+		A2($elm$html$Html$Attributes$style, 'padding', '50 80 50 80')
+	]);
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
@@ -7796,7 +7824,7 @@ var $author$project$Osu$view = F2(
 				var _v2 = loadingModel.soundState;
 				if (_v2.$ === 'Playing') {
 					var list = loadingModel.points;
-					var dots = A2($author$project$Osu$pointToCircles, 'black', list);
+					var dots = A2($author$project$Osu$pointToCircles, '#fae5fc', list);
 					var board = $author$project$Osu$buildBoard;
 					var totalRender = _Utils_ap(
 						_List_fromArray(
@@ -7809,17 +7837,23 @@ var $author$project$Osu$view = F2(
 							[
 								A2(
 								$elm$html$Html$button,
+								_Utils_ap(
+									_List_fromArray(
+										[
+											$elm$html$Html$Events$onClick($author$project$Osu$PressedStop)
+										]),
+									$author$project$Osu$endButtonStyle),
 								_List_fromArray(
 									[
-										$elm$html$Html$Events$onClick($author$project$Osu$PressedStop)
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Stop music')
+										$elm$html$Html$text('End Game')
 									])),
 								A2(
 								$elm$html$Html$div,
-								_List_Nil,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'font', '30px Verdana, sans-serif'),
+										A2($elm$html$Html$Attributes$style, 'padding', '35 0 10 275')
+									]),
 								_List_fromArray(
 									[
 										$elm$html$Html$text(
@@ -7838,18 +7872,25 @@ var $author$project$Osu$view = F2(
 				} else {
 					return A2(
 						$elm$html$Html$div,
-						_List_Nil,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+								A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+								A2($elm$html$Html$Attributes$style, 'justify-content', 'center')
+							]),
 						_List_fromArray(
 							[
 								A2(
 								$elm$html$Html$button,
+								_Utils_ap(
+									_List_fromArray(
+										[
+											$elm$html$Html$Events$onClick($author$project$Osu$PressedPlay)
+										]),
+									$author$project$Osu$startButtonStyle),
 								_List_fromArray(
 									[
-										$elm$html$Html$Events$onClick($author$project$Osu$PressedPlay)
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Play music!')
+										$elm$html$Html$text('Play!')
 									]))
 							]));
 				}

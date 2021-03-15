@@ -4,20 +4,22 @@ import Audio exposing (Audio, AudioCmd, AudioData)
 import Duration
 import Html exposing (..)
 import Html.Events
+import Html.Attributes
 import Json.Decode
 import Json.Encode
 import List.Nonempty exposing (Nonempty(..))
 import Task
 import Time
-import Color exposing (..)
---import Canvas exposing (Shape)
---import Canvas.Settings exposing (..)
---import Html.Attributes exposing (attribute)
+import Style
+import Style.Color
+import Style.Font as Font
+--import Color exposing (..)
 import Random exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing(..)
-
+import Color exposing (white)
+import Html.Attributes
 
 type alias LoadedModel_ =
     { sound : Audio.Source
@@ -160,6 +162,7 @@ pointToCircle foo bar =
              ,cy (String.fromFloat bar.y)
              ,r "10"
              ,fill foo
+             ,stroke "purple"
              ,onClick(Hit (bar))  
            ]
            [] 
@@ -176,7 +179,7 @@ buildBoard =
         , width  "620"
         , height "420"
         ,fill "white"
-        ,stroke "red"
+        ,stroke "purple"
         ,strokeWidth "3"] []
                                     
 
@@ -192,7 +195,7 @@ view _ model =
                 Playing _ ->
                     let 
                        list = loadingModel.points
-                       dots = pointToCircles "black" list
+                       dots = pointToCircles "#fae5fc" list
                        board = buildBoard 
                                     
                                 
@@ -200,11 +203,12 @@ view _ model =
                       in
                       Html.div
                         []
-                        [ Html.button [ Html.Events.onClick PressedStop ] [ Html.text "Stop music" ]
-                        , div [] 
+                        [ Html.button ([ Html.Events.onClick PressedStop] ++ endButtonStyle) [ Html.text "End Game" ]
+                        , div [Html.Attributes.style "font" "30px Verdana, sans-serif"
+                          , Html.Attributes.style "padding" "35 0 10 275"] 
                           [Html.text ("Score: " ++ 
                           (String.fromInt loadingModel.hitCount))]
-                        ,svg
+                        , svg
                           [ width "1100"
                           , height "700"
                           , viewBox "50 50 1100 700"
@@ -218,8 +222,10 @@ view _ model =
                         ]
                 _ ->
                     Html.div
-                        []
-                        [ Html.button [ Html.Events.onClick PressedPlay ] [ Html.text "Play music!" ] ]
+                        [Html.Attributes.style "display" "flex"
+                        , Html.Attributes.style "align-items" "center"
+                        , Html.Attributes.style "justify-content" "center"]
+                        [ Html.button ([ Html.Events.onClick PressedPlay ] ++ startButtonStyle) [ Html.text "Play!" ] ]
         LoadFailedModel ->
             Html.text "Failed to load sound."
 
@@ -259,4 +265,31 @@ main =
         , audioPort = { toJS = audioPortToJS, fromJS = audioPortFromJS }
         }
 
--- DRAWING CIRCLES
+-- STYLES
+
+endButtonStyle : List (Html.Attribute msg)
+endButtonStyle =
+    [ Html.Attributes.style "width" "300px"
+    , Html.Attributes.style "background-color" "#fae5fc"
+    , Html.Attributes.style "color" "purple"
+    , Html.Attributes.style "margin-top" "10px"
+    , Html.Attributes.style "margin-left" "190px"
+    , Html.Attributes.style "border-color" "purple"
+    , Html.Attributes.style "border-width" "2px"
+    , Html.Attributes.style "border-radius" "8px"
+    , Html.Attributes.style "font" "20px Verdana, sans-serif"
+    , Html.Attributes.style "padding" "10 10 10 10"
+    ]
+
+startButtonStyle : List (Html.Attribute msg)
+startButtonStyle =
+    [ Html.Attributes.style "width" "500px"
+    , Html.Attributes.style "background-color" "#e4fccf"
+    , Html.Attributes.style "color" "green"
+    , Html.Attributes.style "margin-top" "200px"
+    , Html.Attributes.style "border-color" "green"
+    , Html.Attributes.style "border-width" "3px"
+    , Html.Attributes.style "border-radius" "12px"
+    , Html.Attributes.style "font" "50px Verdana, sans-serif"
+    , Html.Attributes.style "padding" "50 80 50 80"
+    ]
