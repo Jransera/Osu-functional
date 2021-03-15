@@ -7391,26 +7391,26 @@ var $author$project$Osu$Point = F2(
 	});
 var $author$project$Osu$mapInit = _List_fromArray(
 	[
-		A2($author$project$Osu$Point, 590.0, 154.0),
-		A2($author$project$Osu$Point, 915.0, 300.0),
-		A2($author$project$Osu$Point, 342.0, 488.0),
-		A2($author$project$Osu$Point, 720.0, 369.0),
-		A2($author$project$Osu$Point, 1020.0, 580.0),
-		A2($author$project$Osu$Point, 600.0, 443.0),
-		A2($author$project$Osu$Point, 365.0, 136.0),
-		A2($author$project$Osu$Point, 444.0, 152.0),
-		A2($author$project$Osu$Point, 515.0, 382.0),
-		A2($author$project$Osu$Point, 1079.0, 532.0),
-		A2($author$project$Osu$Point, 101.0, 500.0),
-		A2($author$project$Osu$Point, 665.0, 457.0),
-		A2($author$project$Osu$Point, 1063.0, 332.0),
-		A2($author$project$Osu$Point, 811.0, 491.0),
-		A2($author$project$Osu$Point, 905.0, 202.0),
-		A2($author$project$Osu$Point, 1041.0, 394.0),
-		A2($author$project$Osu$Point, 201.0, 122.0),
-		A2($author$project$Osu$Point, 511.0, 326.0),
-		A2($author$project$Osu$Point, 930.0, 221.0),
-		A2($author$project$Osu$Point, 530.0, 376.0)
+		A2($author$project$Osu$Point, 120.0, 432.0),
+		A2($author$project$Osu$Point, 200.0, 290.0),
+		A2($author$project$Osu$Point, 230.0, 200.0),
+		A2($author$project$Osu$Point, 280.0, 100.0),
+		A2($author$project$Osu$Point, 500.0, 120.0),
+		A2($author$project$Osu$Point, 620.0, 120.0),
+		A2($author$project$Osu$Point, 700.0, 250.0),
+		A2($author$project$Osu$Point, 820.0, 150.0),
+		A2($author$project$Osu$Point, 650.0, 300.0),
+		A2($author$project$Osu$Point, 730.0, 260.0),
+		A2($author$project$Osu$Point, 800.0, 150.0),
+		A2($author$project$Osu$Point, 990.0, 260.0),
+		A2($author$project$Osu$Point, 900.0, 390.0),
+		A2($author$project$Osu$Point, 700.0, 520.0),
+		A2($author$project$Osu$Point, 530.0, 400.0),
+		A2($author$project$Osu$Point, 400.0, 300.0),
+		A2($author$project$Osu$Point, 200.0, 420.0),
+		A2($author$project$Osu$Point, 150.0, 200.0),
+		A2($author$project$Osu$Point, 250.0, 100.0),
+		A2($author$project$Osu$Point, 500.0, 150.0)
 	]);
 var $author$project$Osu$remove = F2(
 	function (p, list) {

@@ -292,7 +292,7 @@ view _ model =
                         []
                         [ Html.button ([ Html.Events.onClick EndGame] ++ endButtonStyle) [ Html.text "End Game" ]
                         , div [Html.Attributes.style "font" "30px Verdana, sans-serif"
-                          , Html.Attributes.style "padding" "35 0 10 465"] 
+                          , Html.Attributes.style "padding" "35 0 10 475"] 
                           [Html.text ("Score: " ++ 
                           (String.fromInt loadingModel.hitCount))]
                         , svg
@@ -355,7 +355,7 @@ endButtonStyle =
     , Html.Attributes.style "background-color" "#fae5fc"
     , Html.Attributes.style "color" "purple"
     , Html.Attributes.style "margin-top" "10px"
-    , Html.Attributes.style "margin-left" "380px"
+    , Html.Attributes.style "margin-left" "390px"
     , Html.Attributes.style "border-color" "purple"
     , Html.Attributes.style "border-width" "2px"
     , Html.Attributes.style "border-radius" "8px"
@@ -383,26 +383,26 @@ startButtonStyle =
 ---MapINIT
 mapInit : List Point
 mapInit = 
-   [ Point 590.0 154.0
-    ,Point 915.0 300.0
-    ,Point 342.0 488.0
-    ,Point 720.0 369.0
-    ,Point 1020.0 580.0
-    ,Point 600.0 443.0
-    ,Point 365.0 136.0
-    ,Point 444.0 152.0
-    ,Point 515.0 382.0
-    ,Point 1079.0 532.0
-    ,Point 101.0 500.0
-    ,Point 665.0 457.0
-    ,Point 1063.0 332.0
-    ,Point 811.0 491.0
-    ,Point 905.0 202.0
-    ,Point 1041.0 394.0
-    ,Point 201.0 122.0
-    ,Point 511.0 326.0
-    ,Point 930.0 221.0
-    ,Point 530.0 376.0
+   [ Point 120.0 432.0
+    ,Point 200.0 290.0
+    ,Point 230.0 200.0
+    ,Point 280.0 100.0
+    ,Point 500.0 120.0
+    ,Point 620.0 120.0
+    ,Point 700.0 250.0
+    ,Point 820.0 150.0
+    ,Point 650.0 300.0
+    ,Point 730.0 260.0
+    ,Point 800.0 150.0
+    ,Point 990.0 260.0
+    ,Point 900.0 390.0
+    ,Point 700.0 520.0
+    ,Point 530.0 400.0
+    ,Point 400.0 300.0
+    ,Point 200.0 420.0
+    ,Point 150.0 200.0
+    ,Point 250.0 100.0
+    ,Point 500.0 150.0
     ] 
 
 
