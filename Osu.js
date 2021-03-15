@@ -7707,6 +7707,8 @@ var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
 var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
+var $elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
+var $elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
 var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
 var $elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
 var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
@@ -7722,7 +7724,9 @@ var $author$project$Osu$buildBoard = A2(
 			$elm$svg$Svg$Attributes$height('420'),
 			$elm$svg$Svg$Attributes$fill('white'),
 			$elm$svg$Svg$Attributes$stroke('purple'),
-			$elm$svg$Svg$Attributes$strokeWidth('3')
+			$elm$svg$Svg$Attributes$strokeWidth('3'),
+			$elm$svg$Svg$Attributes$rx('10px'),
+			$elm$svg$Svg$Attributes$ry('10px')
 		]),
 	_List_Nil);
 var $elm$html$Html$button = _VirtualDom_node('button');

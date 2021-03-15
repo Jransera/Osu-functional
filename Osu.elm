@@ -20,6 +20,7 @@ import Svg.Attributes exposing (..)
 import Svg.Events exposing(..)
 import Color exposing (white)
 import Html.Attributes
+import Ellipse2d exposing (yRadius)
 
 type alias LoadedModel_ =
     { sound : Audio.Source
@@ -180,7 +181,9 @@ buildBoard =
         , height "420"
         ,fill "white"
         ,stroke "purple"
-        ,strokeWidth "3"] []
+        ,strokeWidth "3"
+        ,rx "10px"
+        ,ry "10px"] []
                                     
 
 -- VIEW
