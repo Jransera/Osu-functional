@@ -7584,7 +7584,7 @@ var $author$project$Osu$remove = F2(
 var $author$project$Osu$update = F3(
 	function (_v0, msg, model) {
 		var _v1 = _Utils_Tuple2(msg, model);
-		_v1$8:
+		_v1$9:
 		while (true) {
 			switch (_v1.b.$) {
 				case 'LoadingModel':
@@ -7602,7 +7602,7 @@ var $author$project$Osu$update = F3(
 							return _Utils_Tuple3($author$project$Osu$LoadFailedModel, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
 						}
 					} else {
-						break _v1$8;
+						break _v1$9;
 					}
 				case 'LoadedModel':
 					switch (_v1.a.$) {
@@ -7692,11 +7692,21 @@ var $author$project$Osu$update = F3(
 										})),
 								$elm$core$Platform$Cmd$none,
 								$MartinSStewart$elm_audio$Audio$cmdNone);
+						case 'EndGame':
+							var _v9 = _v1.a;
+							var lM = _v1.b.a;
+							return _Utils_Tuple3(
+								$author$project$Osu$LoadedModel(
+									_Utils_update(
+										lM,
+										{hitCount: 0, points: _List_Nil})),
+								A2($elm$core$Task$perform, $author$project$Osu$PressedStopAndGotTime, $elm$time$Time$now),
+								$MartinSStewart$elm_audio$Audio$cmdNone);
 						default:
-							break _v1$8;
+							break _v1$9;
 					}
 				default:
-					break _v1$8;
+					break _v1$9;
 			}
 		}
 		return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
@@ -7746,6 +7756,11 @@ var $author$project$Osu$endButtonStyle = _List_fromArray(
 		A2($elm$html$Html$Attributes$style, 'font', '20px Verdana, sans-serif'),
 		A2($elm$html$Html$Attributes$style, 'padding', '10 10 10 10')
 	]);
+var $author$project$Osu$EndGame = {$: 'EndGame'};
+var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
+var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -7757,6 +7772,37 @@ var $elm$html$Html$Events$on = F2(
 			event,
 			$elm$virtual_dom$VirtualDom$Normal(decoder));
 	});
+var $elm$svg$Svg$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
+var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var $author$project$Osu$endPointsToCircle = F2(
+	function (foo, bar) {
+		return A2(
+			$elm$svg$Svg$circle,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$cx(
+					$elm$core$String$fromFloat(bar.x)),
+					$elm$svg$Svg$Attributes$cy(
+					$elm$core$String$fromFloat(bar.y)),
+					$elm$svg$Svg$Attributes$r('10'),
+					$elm$svg$Svg$Attributes$fill(foo),
+					$elm$svg$Svg$Attributes$stroke('purple'),
+					$elm$svg$Svg$Events$onClick($author$project$Osu$EndGame)
+				]),
+			_List_Nil);
+	});
+var $author$project$Osu$endCircles = F2(
+	function (colors, points) {
+		return A2(
+			$elm$core$List$map,
+			$author$project$Osu$endPointsToCircle(colors),
+			points);
+	});
 var $elm$html$Html$Events$onClick = function (msg) {
 	return A2(
 		$elm$html$Html$Events$on,
@@ -7766,17 +7812,6 @@ var $elm$html$Html$Events$onClick = function (msg) {
 var $author$project$Osu$Hit = function (a) {
 	return {$: 'Hit', a: a};
 };
-var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
-var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
-var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
-var $elm$core$String$fromFloat = _String_fromNumber;
-var $elm$svg$Svg$Events$onClick = function (msg) {
-	return A2(
-		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
-};
-var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
 var $author$project$Osu$pointToCircle = F2(
 	function (foo, bar) {
 		return A2(
@@ -7828,9 +7863,13 @@ var $author$project$Osu$view = F2(
 				var _v2 = loadingModel.soundState;
 				if (_v2.$ === 'Playing') {
 					var list = loadingModel.points;
+					var endDots = A2($author$project$Osu$endCircles, '#fae5fc', list);
 					var dots = A2($author$project$Osu$pointToCircles, '#fae5fc', list);
 					var board = $author$project$Osu$buildBoard;
-					var totalRender = _Utils_ap(
+					var totalRender = (loadingModel.hitCount > 10) ? _Utils_ap(
+						_List_fromArray(
+							[board]),
+						endDots) : _Utils_ap(
 						_List_fromArray(
 							[board]),
 						dots);

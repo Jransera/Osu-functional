@@ -53,6 +53,7 @@ type Msg
     | RandomPoint Point 
     | Hit Point
     | Tick
+    | EndGame
 
 
 init : flags -> ( Model, Cmd Msg, AudioCmd Msg )
@@ -121,9 +122,15 @@ update _ msg model =
              _ -> (model,Cmd.none,Audio.cmdNone)
              
         (Hit point ,LoadedModel lM) ->
-             (LoadedModel {lM | hitCount = lM.hitCount +1, 
-              points = (remove point lM.points)}
+            (LoadedModel {lM | hitCount = lM.hitCount +1, 
+             points = (remove point lM.points)}
              ,Cmd.none,Audio.cmdNone)
+               
+        (EndGame,LoadedModel lM) ->
+            (LoadedModel {lM | points = [],hitCount = 0}
+             ,Task.perform PressedStopAndGotTime Time.now
+             ,Audio.cmdNone)
+
         _ ->
             ( model, Cmd.none, Audio.cmdNone )
 
@@ -157,6 +164,8 @@ pointGenerator =
     Random.map2 Point x y 
 
 
+
+--OBJECTS
 pointToCircle: String -> Point -> Svg Msg
 pointToCircle foo bar = 
     circle [ cx (String.fromFloat bar.x)
@@ -173,6 +182,26 @@ pointToCircles colors points =
     List.map (pointToCircle colors) points
 
 
+
+
+
+endPointsToCircle: String -> Point -> Svg Msg
+endPointsToCircle foo bar = 
+       circle [ cx (String.fromFloat bar.x)
+               ,cy (String.fromFloat bar.y)
+               ,r "10"
+               ,fill foo
+               ,stroke "purple"
+               ,onClick (EndGame)
+              ]
+             []
+
+
+--EndGame handlers(This is a scuffed way to build this)
+endCircles: String -> List Point -> List (Svg Msg)
+endCircles colors points =
+    List.map (endPointsToCircle colors) points
+
 buildBoard : Svg Msg
 buildBoard = 
     rect [ x "90"
@@ -184,7 +213,8 @@ buildBoard =
         ,strokeWidth "3"
         ,rx "10px"
         ,ry "10px"] []
-                                    
+                          
+          
 
 -- VIEW
 
@@ -196,15 +226,20 @@ view _ model =
         LoadedModel loadingModel ->
             case loadingModel.soundState of
                 Playing _ ->
-                    let 
-                       list = loadingModel.points
-                       dots = pointToCircles "#fae5fc" list
-                       board = buildBoard 
-                                    
-                                
-                       totalRender = [board] ++ dots
+                      let 
+                         list = loadingModel.points
+                    
+                         dots = pointToCircles "#fae5fc" list
+                    
+                         endDots = endCircles "#fae5fc" list
+                         board = buildBoard 
+                         totalRender = 
+                             if loadingModel.hitCount >10 then
+                              [board] ++ endDots
+                             else
+                               [board] ++dots  
                       in
-                      Html.div
+                       Html.div
                         []
                         [ Html.button ([ Html.Events.onClick PressedStop] ++ endButtonStyle) [ Html.text "End Game" ]
                         , div [Html.Attributes.style "font" "30px Verdana, sans-serif"
