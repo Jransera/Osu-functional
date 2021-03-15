@@ -121,7 +121,7 @@ update _ msg model =
         (Tick,LoadedModel lm) ->
           case lm.soundState of
              Playing time ->
-                 (LoadedModel {lm | points = List.take 1 lm.map, 
+                 (LoadedModel {lm | points = lm.points ++List.take 1 lm.map, 
                   map = List.drop 1 lm.map} 
                  , Cmd.none 
                  ,Audio.cmdNone)
@@ -134,7 +134,7 @@ update _ msg model =
              ,Cmd.none,Audio.cmdNone)
                
         (EndGame,LoadedModel lM) ->
-            (LoadedModel {lM | points = [],hitCount = 0}
+            (LoadedModel {lM | points = [],hitCount = 0,map =mapInit}
              ,Task.perform PressedStopAndGotTime Time.now
              ,Audio.cmdNone)
 
@@ -241,14 +241,14 @@ view _ model =
                          endDots = endCircles "#fae5fc" list
                          board = buildBoard 
                          totalRender = 
-                             if loadingModel.hitCount >10 then
+                             if ((List.length loadingModel.map) == 0) then
                               [board] ++ endDots
                              else
                                [board] ++dots  
                       in
                        Html.div
                         []
-                        [ Html.button ([ Html.Events.onClick PressedStop] ++ endButtonStyle) [ Html.text "End Game" ]
+                        [ Html.button ([ Html.Events.onClick EndGame] ++ endButtonStyle) [ Html.text "End Game" ]
                         , div [Html.Attributes.style "font" "30px Verdana, sans-serif"
                           , Html.Attributes.style "padding" "35 0 10 465"] 
                           [Html.text ("Score: " ++ 
@@ -341,7 +341,7 @@ startButtonStyle =
 ---MapINIT
 mapInit : List Point
 mapInit = 
-   [ Point 490.0 240.0
+   [ Point 590.0 340.0
     ,Point 495.0 245.0
     ,Point 480.0 230.0
     ,Point 490.0 230.0
@@ -350,7 +350,10 @@ mapInit =
     ,Point 590.0 340.0
     ,Point 490.0 240.0
     ,Point 490.0 240.0
-   ] 
+    ,Point 590.0 340.0
+    ,Point 600.0 200.0
+    ,Point 200.0 185.0
+    ] 
 
 
 

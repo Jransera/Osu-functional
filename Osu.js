@@ -7391,15 +7391,18 @@ var $author$project$Osu$Point = F2(
 	});
 var $author$project$Osu$mapInit = _List_fromArray(
 	[
+		A2($author$project$Osu$Point, 590.0, 340.0),
+		A2($author$project$Osu$Point, 495.0, 245.0),
+		A2($author$project$Osu$Point, 480.0, 230.0),
+		A2($author$project$Osu$Point, 490.0, 230.0),
+		A2($author$project$Osu$Point, 480.0, 240.0),
+		A2($author$project$Osu$Point, 495.0, 230.0),
+		A2($author$project$Osu$Point, 590.0, 340.0),
 		A2($author$project$Osu$Point, 490.0, 240.0),
 		A2($author$project$Osu$Point, 490.0, 240.0),
-		A2($author$project$Osu$Point, 490.0, 240.0),
-		A2($author$project$Osu$Point, 490.0, 240.0),
-		A2($author$project$Osu$Point, 490.0, 240.0),
-		A2($author$project$Osu$Point, 490.0, 240.0),
-		A2($author$project$Osu$Point, 490.0, 240.0),
-		A2($author$project$Osu$Point, 490.0, 240.0),
-		A2($author$project$Osu$Point, 490.0, 240.0)
+		A2($author$project$Osu$Point, 590.0, 340.0),
+		A2($author$project$Osu$Point, 600.0, 200.0),
+		A2($author$project$Osu$Point, 200.0, 185.0)
 	]);
 var $author$project$Osu$remove = F2(
 	function (p, list) {
@@ -7495,7 +7498,9 @@ var $author$project$Osu$update = F3(
 											lm,
 											{
 												map: A2($elm$core$List$drop, 1, lm.map),
-												points: A2($elm$core$List$take, 1, lm.map)
+												points: _Utils_ap(
+													lm.points,
+													A2($elm$core$List$take, 1, lm.map))
 											})),
 									$elm$core$Platform$Cmd$none,
 									$MartinSStewart$elm_audio$Audio$cmdNone);
@@ -7522,7 +7527,7 @@ var $author$project$Osu$update = F3(
 								$author$project$Osu$LoadedModel(
 									_Utils_update(
 										lM,
-										{hitCount: 0, points: _List_Nil})),
+										{hitCount: 0, map: $author$project$Osu$mapInit, points: _List_Nil})),
 								A2($elm$core$Task$perform, $author$project$Osu$PressedStopAndGotTime, $elm$time$Time$now),
 								$MartinSStewart$elm_audio$Audio$cmdNone);
 						default:
@@ -7534,8 +7539,8 @@ var $author$project$Osu$update = F3(
 		}
 		return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $MartinSStewart$elm_audio$Audio$cmdNone);
 	});
+var $author$project$Osu$EndGame = {$: 'EndGame'};
 var $author$project$Osu$PressedPlay = {$: 'PressedPlay'};
-var $author$project$Osu$PressedStop = {$: 'PressedStop'};
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
@@ -7579,7 +7584,6 @@ var $author$project$Osu$endButtonStyle = _List_fromArray(
 		A2($elm$html$Html$Attributes$style, 'font', '20px Verdana, sans-serif'),
 		A2($elm$html$Html$Attributes$style, 'padding', '10 10 10 10')
 	]);
-var $author$project$Osu$EndGame = {$: 'EndGame'};
 var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
@@ -7689,7 +7693,7 @@ var $author$project$Osu$view = F2(
 					var endDots = A2($author$project$Osu$endCircles, '#fae5fc', list);
 					var dots = A2($author$project$Osu$pointToCircles, '#fae5fc', list);
 					var board = $author$project$Osu$buildBoard;
-					var totalRender = (loadingModel.hitCount > 10) ? _Utils_ap(
+					var totalRender = (!$elm$core$List$length(loadingModel.map)) ? _Utils_ap(
 						_List_fromArray(
 							[board]),
 						endDots) : _Utils_ap(
@@ -7706,7 +7710,7 @@ var $author$project$Osu$view = F2(
 								_Utils_ap(
 									_List_fromArray(
 										[
-											$elm$html$Html$Events$onClick($author$project$Osu$PressedStop)
+											$elm$html$Html$Events$onClick($author$project$Osu$EndGame)
 										]),
 									$author$project$Osu$endButtonStyle),
 								_List_fromArray(
